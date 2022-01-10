@@ -79,6 +79,7 @@ source_projects = {
     "dir": LIBRARY_DEPENDENCY,
     "repositories": {
         "pf-flask-rest-com": "https://github.com/problemfighter/pf-flask-rest-com.git",
+        "pf-py-common": "https://github.com/problemfighter/pf-py-common.git",
     }
 }
 
