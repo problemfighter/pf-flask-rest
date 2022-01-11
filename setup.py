@@ -10,7 +10,8 @@ env = os.environ.get('dev')
 
 def get_dependencies():
     dependency = [
-        'Flask'
+        'Flask',
+        'marshmallow-sqlalchemy'
     ]
 
     if env and env == "dev":
