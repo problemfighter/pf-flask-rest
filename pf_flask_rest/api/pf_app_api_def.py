@@ -3,11 +3,15 @@ from marshmallow_sqlalchemy import SQLAlchemySchema
 from pf_flask_rest_com.api_def import APIDef
 
 
-class APIPrimeDef(APIDef):
+class PFFlaskRestDef(object):
     pass
 
 
-class APIBaseDef(SQLAlchemySchema):
+class APIPrimeDef(PFFlaskRestDef, APIDef):
+    pass
+
+
+class APIBaseDef(PFFlaskRestDef, SQLAlchemySchema):
     pass
 
 
