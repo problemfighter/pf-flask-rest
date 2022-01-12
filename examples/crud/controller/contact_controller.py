@@ -1,5 +1,5 @@
 from flask import Blueprint
-from examples.service.person_service import PersonService
+from examples.crud.service.person_service import PersonService
 
 person_controller = Blueprint("person_controller", __name__, url_prefix="/api/v1/person")
 person_service = PersonService()

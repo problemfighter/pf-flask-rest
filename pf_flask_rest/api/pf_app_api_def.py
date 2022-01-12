@@ -11,7 +11,7 @@ class APIPrimeDef(PFFlaskRestDef, APIDef):
     pass
 
 
-class APIBaseDef(PFFlaskRestDef, SQLAlchemySchema):
+class APIBaseDef(APIPrimeDef, SQLAlchemySchema):
     pass
 
 

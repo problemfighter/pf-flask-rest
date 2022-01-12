@@ -1,5 +1,6 @@
 from marshmallow import fields
-from examples.model.person import Person
+
+from examples.crud.model.person import Person
 from pf_flask_rest.api.pf_app_api_def import APIAppDef
 
 
@@ -13,3 +14,9 @@ class PersonDetailsDTO(APIAppDef):
     email = fields.Email(required=True, error_messages={"required": "Please enter first name"})
     age = fields.Integer(allow_none=None)
     income = fields.Float(allow_none=None)
+
+
+class PersonCreateDTO(PersonDetailsDTO):
+    class Meta:
+        model = Person
+        load_instance = True
