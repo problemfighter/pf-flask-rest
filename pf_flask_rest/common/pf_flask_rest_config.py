@@ -1,6 +1,7 @@
 class PFFRMessageConfig:
     invalid_request_data = "Invalid Request Data"
-    validation_error = "Validation Errors"
+    validation_error = "Validation Error!"
+    unknown_error = "Unknown Error Occurred!"
 
 
 class PFFRConfig:

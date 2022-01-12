@@ -1,5 +1,6 @@
+from flask import sessions
 from marshmallow import ValidationError
-from pf_flask_rest.api.pf_app_api_def import PFFlaskRestDef, APIPrimeDef
+from pf_flask_rest.api.pf_app_api_def import APIPrimeDef
 from pf_flask_rest.common.pf_flask_rest_config import PFFRMessageConfig, PFFRConfig
 from pf_flask_rest.common.pffr_exception_handler import pffr_exception_handler
 from pf_flask_rest_com.common.pffr_exception import pffrc_exception
@@ -11,23 +12,23 @@ class RequestProcessor:
 
     request_helper: RequestHelper = RequestHelper()
 
-    def validate_data(self, data: dict, api_def: APIPrimeDef):
+    def validate_data(self, data: dict, api_def: APIPrimeDef, session=sessions):
         try:
-            errors = api_def.validate(data)
+            errors = api_def.validate(data, session=session)
             if errors:
                 errors = pffr_exception_handler.process_validation_error(errors)
                 raise pffrc_exception.error_details_exception(
                     message=PFFRMessageConfig.validation_error,
-                    errors=errors
+                    details=errors
                 )
         except ValidationError as error:
             errors = pffr_exception_handler.process_validation_error(error.messages)
             raise pffrc_exception.error_details_exception(
                 message=PFFRMessageConfig.validation_error,
-                errors=errors
+                details=errors
             )
 
-    def populate_model(self, data: dict, api_def: APIPrimeDef, session=None, instance=None):
+    def populate_model(self, data: dict, api_def: APIPrimeDef, session=sessions, instance=None):
         pass
 
     def get_rest_json_data(self, api_def: APIPrimeDef, is_validate=True):

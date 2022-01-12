@@ -9,6 +9,7 @@ class RestCRUDHelper:
     def rest_create(self, api_def: APIPrimeDef):
         data = self.request_processor.get_rest_json_data(api_def)
         print(data)
+        return {}
 
     def rest_update(self, api_def: APIPrimeDef):
         pass
