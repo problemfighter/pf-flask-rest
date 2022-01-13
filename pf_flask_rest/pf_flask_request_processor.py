@@ -1,5 +1,5 @@
 from flask import sessions
-from marshmallow import ValidationError
+from marshmallow import ValidationError, EXCLUDE
 from pf_flask_rest.api.pf_app_api_def import APIPrimeDef
 from pf_flask_rest.common.pf_flask_rest_config import PFFRMessageConfig, PFFRConfig
 from pf_flask_rest.common.pffr_exception_handler import pffr_exception_handler
@@ -21,6 +21,7 @@ class RequestProcessor:
                     message=PFFRMessageConfig.validation_error,
                     details=errors
                 )
+            return data
         except ValidationError as error:
             errors = pffr_exception_handler.process_validation_error(error.messages)
             raise pffrc_exception.error_details_exception(
@@ -29,7 +30,14 @@ class RequestProcessor:
             )
 
     def populate_model(self, data: dict, api_def: APIPrimeDef, session=sessions, instance=None):
-        pass
+        try:
+            return api_def.load(data, session=session, instance=instance, unknown=EXCLUDE)
+        except ValidationError as error:
+            errors = pffr_exception_handler.process_validation_error(error.messages)
+            raise pffrc_exception.error_details_exception(
+                message=PFFRMessageConfig.validation_error,
+                details=errors
+            )
 
     def get_rest_json_data(self, api_def: APIPrimeDef, is_validate=True):
         json_obj = self.request_helper.json_data()

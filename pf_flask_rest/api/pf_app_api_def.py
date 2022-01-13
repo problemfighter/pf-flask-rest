@@ -1,5 +1,5 @@
 from marshmallow import fields
-from marshmallow_sqlalchemy import SQLAlchemySchema
+from marshmallow_sqlalchemy import SQLAlchemySchema, auto_field
 from pf_flask_rest_com.api_def import APIDef
 
 
