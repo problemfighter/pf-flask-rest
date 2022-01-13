@@ -44,7 +44,6 @@ def test__post_json_details_response_create():
     headers = {'Content-type': 'application/json'}
     response = requests.post(BASE_URL + "details-response-create", data=json.dumps(data), headers=headers)
     response_data = json.loads(response.json())
-    print(response_data)
     assert response.status_code == 200, "Should be 200"
     assert response_data['status'] == "success", "Should be success"
     assert response_data['data']['first_name'] == first_name, "Should be " + first_name
