@@ -16,6 +16,10 @@ class APIBaseDef(APIPrimeDef, SQLAlchemySchema):
 
 
 class APIAppDef(APIBaseDef):
+
+    class Meta:
+        ordered = True
+
     id = fields.Integer(dump_only=True)
     created = fields.DateTime(dump_only=True)
     updated = fields.DateTime(dump_only=True)

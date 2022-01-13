@@ -25,7 +25,7 @@ def test__post_json_validation_error():
     assert response_data["status"] == "error", "Should be error"
 
 
-def test__post_json():
+def test__post_json_create():
     data = {
         "data": {'first_name': 'hmtmcse', 'last_name': "com", 'email': 'hmtmcse.com@gmail.com', 'age': 7, 'income': 5000}
     }
@@ -39,5 +39,5 @@ def test__post_json():
 if __name__ == '__main__':
     test__invalid_post_json()
     test__post_json_validation_error()
-    test__post_json()
+    test__post_json_create()
 
