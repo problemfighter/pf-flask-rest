@@ -10,6 +10,11 @@ def create():
     return person_service.create()
 
 
+@person_controller.route("/details-response-create", methods=['POST'])
+def details_response_create():
+    return person_service.details_response_create()
+
+
 @person_controller.route("/details/<int:id>", methods=['GET'])
 def details(id: int):
     return person_service.details(id)
