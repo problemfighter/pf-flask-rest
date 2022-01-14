@@ -1,6 +1,7 @@
 from pf_flask_db.pf_app_model import BaseModel
 from pf_flask_rest.api.pf_app_api_def import APIPrimeDef
-from pf_flask_rest_com.data.pffrc_response_data import PFFRCMessageResponse, PFFRCDataResponse
+from pf_flask_rest_com.data.pffrc_response_data import PFFRCMessageResponse, PFFRCDataResponse, PFFRCPagination, \
+    PFFRCPaginateResponse
 from pf_flask_rest_com.data.pffrc_response_status import PFFRCResponseStatus, PFFRCResponseCode
 from pf_flask_rest_com.pf_flask_response_helper import ResponseHelper
 
@@ -34,8 +35,20 @@ class ResponseProcessor:
         data_response.add_data(model, response_def, many)
         return self.response_helper.json_response(data_response.to_dict(), http_code, self.headers)
 
-    def paginate_response(self):
-        pass
+    def paginate_response(self, model: BaseModel, response_def: APIPrimeDef):
+        pagination = PFFRCPagination()
+        pagination.page = model.page
+        pagination.totalPage = model.pages
+        pagination.itemPerPage = model.per_page
+        pagination.total = model.total
+
+        response = PFFRCPaginateResponse()
+        response.status = PFFRCResponseStatus.success
+        response.code = PFFRCResponseCode.success
+        response.pagination = pagination
+        response.add_data(model.items, response_def, True)
+        return self.response_helper.json_response(response.to_dict(), headers=self.headers)
+
 
     def list_response(self):
         pass

@@ -49,9 +49,17 @@ def test__post_json_details_response_create():
     assert response_data['data']['first_name'] == first_name, "Should be " + first_name
 
 
+def test__get_list():
+    response = requests.get(BASE_URL + "list")
+    response_data = response.json()
+    assert response.status_code == 200, "Should be 200"
+    print(response_data)
+
+
 if __name__ == '__main__':
     test__invalid_post_json()
     test__post_json_validation_error()
     test__post_json_create()
     test__post_json_details_response_create()
+    test__get_list()
 
