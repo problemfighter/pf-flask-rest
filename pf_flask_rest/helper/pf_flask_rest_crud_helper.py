@@ -25,7 +25,7 @@ class RestCRUDHelper:
 
     def rest_update(self, request_def: APIPrimeDef, response_def: APIPrimeDef = None, response_message: str = "Successfully Updated!"):
         data = self.request_processor.get_rest_json_data(request_def)
-        existing_model = self.crud_helper.get_by_id(self.model, data.id)
+        existing_model = self.crud_helper.get_by_id(self.model, data['id'])
         model = self.request_processor.populate_model(data, request_def, instance=existing_model)
         model.save()
         if not response_def:
