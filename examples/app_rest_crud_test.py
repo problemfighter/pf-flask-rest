@@ -53,7 +53,18 @@ def test__get_list():
     response = requests.get(BASE_URL + "list")
     response_data = response.json()
     assert response.status_code == 200, "Should be 200"
-    print(response_data)
+    assert "pagination" in response_data, "Should be pagination"
+    assert "data" in response_data, "Should be data"
+
+
+def test__get_list_pagination():
+    response = requests.get(BASE_URL + "list?per-page=2&sort-order=asc")
+    response_data = response.json()
+    assert response.status_code == 200, "Should be 200"
+    assert "pagination" in response_data, "Should be pagination"
+    assert "data" in response_data, "Should be data"
+    assert response_data["pagination"]['itemPerPage'] == 2, "Should be 2"
+    assert response_data["data"][0]['id'] == 1, "Should be 1"
 
 
 if __name__ == '__main__':
@@ -62,4 +73,5 @@ if __name__ == '__main__':
     test__post_json_create()
     test__post_json_details_response_create()
     test__get_list()
+    test__get_list_pagination()
 
