@@ -1,8 +1,9 @@
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 
 from pf_flask_db.pf_app_model import BaseModel
 from pf_flask_rest.api.pf_app_api_def import APIPrimeDef
 from pf_flask_rest.common.pf_flask_rest_config import PFFRConfig
+from pf_flask_rest_com.common.pffr_exception import pffrc_exception
 from pf_flask_rest_com.pf_flask_request_helper import RequestHelper
 
 
@@ -21,6 +22,14 @@ class CRUDHelper:
 
     def details(self, api_def: APIPrimeDef):
         pass
+
+    def get_by_id(self, model: BaseModel, id: int, is_deleted: bool = False, exception: bool = False, message: str = "Entry Not Found!"):
+        result = model.query.filter(and_(model.id == id, model.isDeleted == is_deleted)).first()
+        if result:
+            return result
+        if not result and exception:
+            raise pffrc_exception.error_message_exception(message)
+        return None
 
     def list(self,
              model: BaseModel, query=None, search_fields: list = None, enable_pagination: bool = True, enable_sort: bool = True,

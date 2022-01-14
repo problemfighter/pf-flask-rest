@@ -20,3 +20,10 @@ class PersonCreateDTO(PersonDetailsDTO):
         model = Person
         load_instance = True
 
+
+class PersonUpdateDTO(PersonDetailsDTO):
+    class Meta:
+        model = Person
+        load_instance = True
+
+    id = fields.Integer(required=True, error_messages={"required": "Please enter id"})
