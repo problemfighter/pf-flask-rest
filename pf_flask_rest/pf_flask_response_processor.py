@@ -20,7 +20,7 @@ class ResponseProcessor:
         message_response.message = message
         message_response.status = status
         message_response.code = code
-        return self.response_helper.json_response(message_response.to_dict(), http_code, self.headers)
+        return self.response_helper.json_string_response(message_response.to_dict(), http_code, self.headers)
 
     def success_message(self, message: str, code: str = PFFRCResponseCode.success, http_code=200):
         return self.message(message, PFFRCResponseStatus.success, code, http_code)
@@ -33,7 +33,7 @@ class ResponseProcessor:
         data_response.status = status
         data_response.code = code
         data_response.add_data(model, response_def, many)
-        return self.response_helper.json_response(data_response.to_dict(), http_code, self.headers)
+        return self.response_helper.json_string_response(data_response.to_dict(), http_code, self.headers)
 
     def paginate_response(self, model: BaseModel, response_def: APIPrimeDef):
         pagination = PFFRCPagination()
@@ -47,7 +47,7 @@ class ResponseProcessor:
         response.code = PFFRCResponseCode.success
         response.pagination = pagination
         response.add_data(model.items, response_def, True)
-        return self.response_helper.json_response(response.to_dict(), headers=self.headers)
+        return self.response_helper.json_string_response(response.to_dict(), headers=self.headers)
 
 
     def list_response(self):
