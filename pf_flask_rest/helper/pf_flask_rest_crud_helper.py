@@ -25,7 +25,7 @@ class RestCRUDHelper:
 
     def rest_update(self, request_def: APIPrimeDef, response_def: APIPrimeDef = None, response_message: str = "Successfully Updated!"):
         data = self.request_processor.get_rest_json_data(request_def)
-        existing_model = self.crud_helper.get_by_id(self.model, data['id'])
+        existing_model = self.crud_helper.get_by_id(self.model, data['id'], exception=True)
         model = self.request_processor.populate_model(data, request_def, instance=existing_model)
         model.save()
         if not response_def:
@@ -33,19 +33,19 @@ class RestCRUDHelper:
         return self.response_processor.data_response(model, response_def)
 
     def rest_delete(self, model_id: int, response_message: str = "Successfully Deleted!"):
-        existing_model = self.crud_helper.get_by_id(self.model, model_id)
+        existing_model = self.crud_helper.get_by_id(self.model, model_id, exception=True)
         existing_model.isDeleted = True
         existing_model.save()
         return self.response_processor.success_message(response_message)
 
     def rest_restore(self, model_id: int, response_message: str = "Successfully Restored!"):
-        existing_model = self.crud_helper.get_by_id(self.model, model_id, is_deleted=True)
+        existing_model = self.crud_helper.get_by_id(self.model, model_id, is_deleted=True, exception=True)
         existing_model.isDeleted = False
         existing_model.save()
         return self.response_processor.success_message(response_message)
 
     def rest_details(self, model_id: int, response_def: APIPrimeDef):
-        existing_model = self.crud_helper.get_by_id(self.model, model_id)
+        existing_model = self.crud_helper.get_by_id(self.model, model_id, exception=True)
         return self.response_processor.data_response(existing_model, response_def)
 
     def rest_paginated_list(self,

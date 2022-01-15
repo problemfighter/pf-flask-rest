@@ -49,7 +49,6 @@ class ResponseProcessor:
         response.add_data(model.items, response_def, True)
         return self.response_helper.json_string_response(response.to_dict(), headers=self.headers)
 
-
     def list_response(self):
         pass
 

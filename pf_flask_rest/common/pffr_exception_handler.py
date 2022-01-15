@@ -1,6 +1,7 @@
+from pf_flask_rest_com.pf_flask_response_helper import response_helper
+
 from pf_flask_rest.common.pf_flask_rest_config import PFFRMessageConfig
 from pf_flask_rest_com.common.pffr_exception import PFFRCException, pffrc_exception
-from pf_flask_rest_com.data.pffrc_response_status import PFFRCResponseStatus
 
 
 class PFFRExceptionHandler:
@@ -20,14 +21,16 @@ class PFFRExceptionHandler:
         return self.get_rest_message_response(PFFRMessageConfig.unknown_error)
 
     def get_pffrc_exception_response(self, exception: PFFRCException):
+        json_string_response = {}
         if exception.messageResponse:
-            return exception.messageResponse.to_dict()
+            json_string_response = exception.messageResponse.to_dict()
         elif exception.error_details_exception:
-            return exception.errorResponse.to_dict()
+            json_string_response = exception.errorResponse.to_dict()
         elif exception.message:
-            return self.get_rest_message_response(exception.message)
+            json_string_response = self.get_rest_message_response(exception.message)
         else:
-            return self.get_rest_message_response(PFFRMessageConfig.unknown_error)
+            json_string_response = self.get_rest_message_response(PFFRMessageConfig.unknown_error)
+        return response_helper.json_string_response(json_string_response)
 
     def get_rest_message_response(self, message: str):
         error_exception = self.get_rest_error_exception(message)

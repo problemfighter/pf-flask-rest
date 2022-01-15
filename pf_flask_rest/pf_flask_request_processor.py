@@ -50,5 +50,3 @@ class RequestProcessor:
             self.validate_data(json_obj, api_def)
         return json_obj
 
-    def validate_and_get_form_data(self):
-        pass
