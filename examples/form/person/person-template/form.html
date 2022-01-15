@@ -1,0 +1,39 @@
+<div class="col-6">
+    <label class="form-label">First Name</label>
+    <input type="text" name="{{form.first_name.name}}" value="{{form.first_name.value}}" class="form-control {{ form.first_name.has_error and 'is-invalid' }}">
+    {% if form.first_name.errors %}
+        <div class="invalid-feedback">
+            {{- form.first_name.errors }}
+        </div>
+    {% endif %}
+</div>
+
+<div class="col-6">
+    <label class="form-label">Last Name</label>
+    <input type="text" name="{{form.last_name.name}}" value="{{form.last_name.value}}" class="form-control">
+</div>
+
+<div class="col-6">
+    <label class="form-label">Email</label>
+    <input type="email" name="{{form.email.name}}" value="{{form.email.value}}" class="form-control {{ form.email.has_error and 'is-invalid' }}">
+    {% if form.email.errors %}
+        <div class="invalid-feedback">
+            {{- form.email.errors }}
+        </div>
+    {% endif %}
+</div>
+
+<div class="col-6">
+    <label class="form-label">Age</label>
+    <input type="number" name="{{form.age.name}}" value="{{form.age.value}}"  class="form-control {{ form.age.has_error and 'is-invalid' }}">
+    {% if form.age.errors %}
+        <div class="invalid-feedback">
+            {{- form.age.errors }}
+        </div>
+    {% endif %}
+</div>
+
+<div class="col-6">
+    <label class="form-label">Income</label>
+    <input type="number" name="{{form.income.name}}" value="{{form.income.value}}" class="form-control">
+</div>

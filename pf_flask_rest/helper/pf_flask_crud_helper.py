@@ -11,18 +11,6 @@ class CRUDHelper:
 
     request_helper: RequestHelper = RequestHelper()
 
-    def create(self, api_def: APIPrimeDef):
-        pass
-
-    def update(self, api_def: APIPrimeDef):
-        pass
-
-    def delete(self, api_def: APIPrimeDef):
-        pass
-
-    def details(self, api_def: APIPrimeDef):
-        pass
-
     def get_by_id(self, model: BaseModel, id: int, is_deleted: bool = False, exception: bool = False, message: str = "Entry Not Found!"):
         result = model.query.filter(and_(model.id == id, model.isDeleted == is_deleted)).first()
         if result:

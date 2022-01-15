@@ -76,3 +76,10 @@ class FormDefinition:
                 field_definition = getattr(self, field_name)
                 field_definition.errors = errors[field_name]
                 field_definition.has_error = True
+
+    def set_model_value(self, model):
+        for field_name in self._field_datatype_dict:
+            model_data = getattr(model, field_name)
+            if hasattr(self, field_name):
+                field_definition = getattr(self, field_name)
+                field_definition.value = model_data

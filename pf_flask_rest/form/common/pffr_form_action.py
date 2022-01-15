@@ -1,4 +1,5 @@
 from werkzeug.utils import redirect
+from pf_flask_db.pf_app_model import BaseModel
 from pf_flask_rest.api.pf_app_api_def import APIBaseDef
 from pf_flask_rest.form.common.pffr_form_definition import FormDefinition
 from pf_flask_rest.pf_flask_request_processor import RequestProcessor
@@ -27,16 +28,19 @@ class FormAction(APIBaseDef):
     def is_post_request(self) -> bool:
         return self.request_helper.is_post()
 
-    def get_model(self):
+    def is_get_request(self) -> bool:
+        return self.request_helper.is_get()
+
+    def get_model(self, existing_model=None):
         try:
-            return self.request_processor.populate_model(self.definition.filtered_field_dict, self)
+            return self.request_processor.populate_model(self.definition.filtered_field_dict, self, instance=existing_model)
         except PFFRCException as e:
             if e.messageResponse and e.messageResponse.error:
                 self.definition.set_field_errors(e.messageResponse.error)
                 return redirect(self.request_helper.get_current_url())
 
-    def set_model_data(self):
-        pass
+    def set_model_data(self, model: BaseModel):
+        self.definition.set_model_value(model)
 
     def get_requested_data(self):
         return self.request_helper.form_data()

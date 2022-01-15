@@ -4,18 +4,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-    <title>Create Person</title>
+    <title>Update Person</title>
 </head>
 <body>
     <div class="container">
-        <h1 class="mt-5 mb-3">Create Person</h1>
+        <h1 class="mt-5 mb-3">Update Person</h1>
         <div class="card">
             <div class="card-body">
-                <form class="row g-3" method="post" action="{{url_for('person_blueprint.create_form')}}">
+                <form class="row g-3" method="post" action="{{url_for('person_blueprint.update_form', id=id|string)}}">
                     {% include 'form.html' %}
+                    <input type="hidden" value="{{id}}" name="id">
                     <div class="col-12 float-end">
                     <span class="float-end">
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
                         <a href="{{url_for('person_blueprint.list')}}" class="btn btn-danger">Cancel</a>
                     </span>
                     </div>

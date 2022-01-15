@@ -32,20 +32,20 @@ class RestCRUDHelper:
             return self.response_processor.success_message(response_message)
         return self.response_processor.data_response(model, response_def)
 
-    def rest_delete(self, id: int, response_message: str = "Successfully Deleted!"):
-        existing_model = self.crud_helper.get_by_id(self.model, id)
+    def rest_delete(self, model_id: int, response_message: str = "Successfully Deleted!"):
+        existing_model = self.crud_helper.get_by_id(self.model, model_id)
         existing_model.isDeleted = True
         existing_model.save()
         return self.response_processor.success_message(response_message)
 
-    def rest_restore(self, id: int, response_message: str = "Successfully Restored!"):
-        existing_model = self.crud_helper.get_by_id(self.model, id, is_deleted=True)
+    def rest_restore(self, model_id: int, response_message: str = "Successfully Restored!"):
+        existing_model = self.crud_helper.get_by_id(self.model, model_id, is_deleted=True)
         existing_model.isDeleted = False
         existing_model.save()
         return self.response_processor.success_message(response_message)
 
-    def rest_details(self, id: int, response_def: APIPrimeDef):
-        existing_model = self.crud_helper.get_by_id(self.model, id)
+    def rest_details(self, model_id: int, response_def: APIPrimeDef):
+        existing_model = self.crud_helper.get_by_id(self.model, model_id)
         return self.response_processor.data_response(existing_model, response_def)
 
     def rest_paginated_list(self,
