@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, redirect
+
+from examples.form.person.person_form import PersonForm
 
 person_blueprint = Blueprint(
     "person_blueprint",
@@ -10,8 +12,20 @@ person_blueprint = Blueprint(
 )
 
 
-@person_blueprint.route("/create-form")
+@person_blueprint.route("/create-form", methods=['POST', 'GET'])
 def create_form():
-    return render_template("create-form.html")
+    form = PersonForm()
+    if form.is_post_request() and form.is_valid_data():
+        model = form.get_model()
+        model.save()
+        return redirect("/person/list")
+    return render_template("create-form.html", form=form.definition)
+
+
+@person_blueprint.route("/list")
+def list():
+    return render_template("list.html")
+
+
 
 

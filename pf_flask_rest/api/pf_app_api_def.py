@@ -1,5 +1,5 @@
 from marshmallow import fields
-from marshmallow_sqlalchemy import SQLAlchemySchema, auto_field
+from marshmallow_sqlalchemy import SQLAlchemySchema
 from pf_flask_rest_com.api_def import APIDef
 
 
@@ -15,10 +15,6 @@ class APIBaseDef(APIPrimeDef, SQLAlchemySchema):
     pass
 
 
-class FormBaseDef(APIBaseDef):
-    pass
-
-
 class APIAppDef(APIBaseDef):
 
     class Meta:
@@ -28,7 +24,3 @@ class APIAppDef(APIBaseDef):
     created = fields.DateTime(dump_only=True)
     updated = fields.DateTime(dump_only=True)
     uuid = fields.UUID(dump_only=True)
-
-
-class FormAppDef(APIAppDef):
-    pass
