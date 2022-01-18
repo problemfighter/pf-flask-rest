@@ -4,7 +4,7 @@
 
 Problem Fighter Flask Representational State Transfer (PF-Flask-REST) library is build for rapid API development & Monolithic 
 application development. It has useful class and methods which allow developer to build set of CRUD API end points within 5 minutes. 
-Automatic Data validation, Data processing, & Data CRUD with Database. Let’s see what is waiting for us.
+Automatic Data validation, Data processing, & Data CRUD with Database. Let's see what is waiting for us.
 
 
 
