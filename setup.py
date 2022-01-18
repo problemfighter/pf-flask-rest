@@ -9,12 +9,15 @@ env = os.environ.get('dev')
 
 
 def get_dependencies():
-    dependency = []
+    dependency = [
+        'Flask',
+        'marshmallow-sqlalchemy'
+    ]
 
     if env and env == "dev":
         return dependency
 
-    return dependency + ["PF-Flask-Rest-Com"]
+    return dependency + ["PF-Flask-Rest-Com", "PF-PY-Common"]
 
 
 setup(
