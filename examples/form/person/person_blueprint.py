@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, redirect
-
 from examples.form.person.person import Person
 from pf_flask_rest.helper.pf_flask_form_crud_helper import FormCRUDHelper
 from examples.form.person.person_form import PersonForm, PersonUpdateForm
