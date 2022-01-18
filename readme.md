@@ -161,11 +161,11 @@ Open POSTMan or any other REST API client and try below end-points
 * *Restore Soft Delete End-Points (GET):* http://127.0.0.1:5000/restore/<id>
 * *List with pagination End-Points (GET):* http://127.0.0.1:5000/list
 * Params
-** per-page
-** page
-** sort-field
-** sort-order
-** search
+  * per-page
+  * page
+  * sort-field
+  * sort-order
+  * search
 
 
 **Please find [the Documentation](https://www.hmtmcse.com/pf/pf-flask-rest/latest/quickstart) with example from [hmtmcse.com](https://www.hmtmcse.com/pf/pf-flask-rest/latest/quickstart)**
