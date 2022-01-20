@@ -17,12 +17,12 @@ def get_dependencies():
     if env and env == "dev":
         return dependency
 
-    return dependency + ["PF-Flask-Rest-Com", "PF-PY-Common"]
+    return dependency + ["PF-Flask-Rest-Com", "PF-PY-Common", "PF-Flask-DB"]
 
 
 setup(
     name='PF-Flask-REST',
-    version='1.0.0',
+    version='1.0.1',
     url='https://github.com/problemfighter/pf-flask-rest',
     license='Apache 2.0',
     author='Problem Fighter',
