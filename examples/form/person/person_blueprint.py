@@ -25,6 +25,7 @@ def create_form():
     return render_template("create-form.html", form=form.definition)
 
 
+@person_blueprint.route("/")
 @person_blueprint.route("/list")
 def list():
     data_list = form_crud_helper.form_list()

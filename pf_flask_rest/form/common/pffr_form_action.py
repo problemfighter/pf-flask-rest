@@ -18,6 +18,9 @@ class FormAction(APIBaseDef):
             try:
                 self.definition.cast_set_request_value(form_data)
                 self.request_processor.validate_data(self.definition.filtered_field_dict, self)
+                for field in self.definition.filtered_field_dict:
+                    if hasattr(self, field):
+                        setattr(self, field, self.definition.filtered_field_dict[field])
                 return True
             except PFFRCException as e:
                 if e.messageResponse and e.messageResponse.error:
