@@ -6,6 +6,7 @@ class FormDefinition:
     _field_datatype_dict: dict = {}
     filtered_field_dict: dict = {}
     field_dict: dict = {}
+    validation_errors: list = []
 
     def init_fields(self, declared_fields: dict = None):
         self.init_all()
@@ -19,6 +20,33 @@ class FormDefinition:
         self.filtered_field_dict = {}
         self.field_dict = {}
         self.is_validation_error = False
+        self.validation_errors = []
+
+    def set_field_errors(self, errors: dict):
+        self.is_validation_error = True
+        for field_name in errors:
+            if hasattr(self, field_name):
+                field_definition = getattr(self, field_name)
+                field_definition.errors = errors[field_name]
+                field_definition.has_error = True
+
+    def set_model_value(self, model):
+        for field_name in self._field_datatype_dict:
+            model_data = getattr(model, field_name)
+            if hasattr(self, field_name):
+                field_definition = getattr(self, field_name)
+                field_definition.value = model_data
+
+    def cast_set_request_value(self, values: dict):
+        for field_name in self._field_datatype_dict:
+            if field_name in values and hasattr(self, field_name):
+                datatype = self._field_datatype_dict[field_name]
+                self._cast_value(datatype, values[field_name], field_name)
+
+    def add_validation_error(self, error: str):
+        self.is_validation_error = True
+        self.validation_errors.append(error)
+        return self
 
     def _set_field_definition(self, field):
         setattr(self, field.name, self._init_field_definition(field))
@@ -35,12 +63,6 @@ class FormDefinition:
         if field.default:
             definition.value = field.default
         return definition
-
-    def cast_set_request_value(self, values: dict):
-        for field_name in self._field_datatype_dict:
-            if field_name in values and hasattr(self, field_name):
-                datatype = self._field_datatype_dict[field_name]
-                self._cast_value(datatype, values[field_name], field_name)
 
     def _cast_value(self, datatype, value, field_name):
         definition = getattr(self, field_name)
@@ -69,17 +91,4 @@ class FormDefinition:
     def _cast_boolean(self, value, field_name):
         self.filtered_field_dict[field_name] = bool(value)
 
-    def set_field_errors(self, errors: dict):
-        self.is_validation_error = True
-        for field_name in errors:
-            if hasattr(self, field_name):
-                field_definition = getattr(self, field_name)
-                field_definition.errors = errors[field_name]
-                field_definition.has_error = True
 
-    def set_model_value(self, model):
-        for field_name in self._field_datatype_dict:
-            model_data = getattr(model, field_name)
-            if hasattr(self, field_name):
-                field_definition = getattr(self, field_name)
-                field_definition.value = model_data
