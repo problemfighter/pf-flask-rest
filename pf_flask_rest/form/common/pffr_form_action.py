@@ -1,3 +1,4 @@
+from marshmallow import missing
 from werkzeug.utils import redirect
 from pf_flask_db.pf_app_model import BaseModel
 from pf_flask_rest.api.pf_app_api_def import APIBaseDef
@@ -18,9 +19,7 @@ class FormAction(APIBaseDef):
             try:
                 self.definition.cast_set_request_value(form_data)
                 self.request_processor.validate_data(self.definition.filtered_field_dict, self)
-                for field in self.definition.filtered_field_dict:
-                    if field in self.fields:
-                        setattr(self, field, self.definition.filtered_field_dict[field])
+                self._set_property()
                 return True
             except PFFRCException as e:
                 if e.messageResponse and e.messageResponse.error:
@@ -47,3 +46,14 @@ class FormAction(APIBaseDef):
 
     def get_requested_data(self):
         return self.request_helper.form_data()
+
+    def _set_property(self):
+        for field_name in self.fields:
+            value = None
+            if field_name in self.definition.filtered_field_dict:
+                value = self.definition.filtered_field_dict[field_name]
+            else:
+                field_def = self.fields[field_name]
+                if self.fields[field_name].default != missing:
+                    value = field_def.default
+            setattr(self, field_name, value)
