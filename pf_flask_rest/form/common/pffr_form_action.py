@@ -19,7 +19,7 @@ class FormAction(APIBaseDef):
             try:
                 self.definition.cast_set_request_value(form_data)
                 self.request_processor.validate_data(self.definition.filtered_field_dict, self)
-                self._set_property()
+                self.set_property()
                 return True
             except PFFRCException as e:
                 if e.messageResponse and e.messageResponse.error:
@@ -47,7 +47,7 @@ class FormAction(APIBaseDef):
     def get_requested_data(self):
         return self.request_helper.form_data()
 
-    def _set_property(self):
+    def set_property(self):
         for field_name in self.fields:
             value = None
             if field_name in self.definition.filtered_field_dict:
