@@ -17,6 +17,9 @@ class FieldData(object):
     inputAttr: str = ""
     topAttrClass: str = ""
     inputAttrClass: str = ""
+    selectOptions: dict = {}
+    selectDefault: str = None
+    isMultiSelect: bool = False
 
     def process_data(self, field):
         self._process_metadata(field.metadata)
