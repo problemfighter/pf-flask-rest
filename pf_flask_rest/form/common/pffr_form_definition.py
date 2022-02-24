@@ -56,7 +56,10 @@ class FormDefinition:
         definition.name = field.name
         definition.required = field.required
         definition = self._set_field_value(field, definition)
-        self._field_datatype_dict[definition.name] = field.__class__.__name__
+        data_type = field.__class__.__name__
+        definition.dataType = data_type
+        self._field_datatype_dict[definition.name] = data_type
+        definition.process_data(field, data_type)
         return definition
 
     def _set_field_value(self, field, definition: FieldData):
