@@ -59,7 +59,7 @@ class FormDefinition:
         data_type = field.__class__.__name__
         definition.dataType = data_type
         self._field_datatype_dict[definition.name] = data_type
-        definition.process_data(field, data_type)
+        definition.process_data(field)
         return definition
 
     def _set_field_value(self, field, definition: FieldData):

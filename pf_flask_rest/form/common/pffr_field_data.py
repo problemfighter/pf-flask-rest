@@ -1,3 +1,4 @@
+from pf_py_text.pfpt_string_util import PFPTStringUtil
 
 
 class FieldData(object):
@@ -17,9 +18,10 @@ class FieldData(object):
     topAttrClass: str = ""
     inputAttrClass: str = ""
 
-    def process_data(self, field, data_type):
+    def process_data(self, field):
         self._process_metadata(field.metadata)
         self._process_attr(["topAttr", "inputAttr"])
+        self._post_process(field)
 
     def _process_metadata(self, metadata: dict):
         for data in metadata:
@@ -40,3 +42,9 @@ class FieldData(object):
                         html_attr += "" + attr + '="' + str(field_data[attr]) + '" '
                 setattr(self, field, html_attr.strip())
 
+    def _post_process(self, field):
+        self._set_label()
+
+    def _set_label(self):
+        if not self.label and self.name:
+            self.label = PFPTStringUtil.human_readable(self.name)
