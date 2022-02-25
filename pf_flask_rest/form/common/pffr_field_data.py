@@ -47,7 +47,13 @@ class FieldData(object):
 
     def _post_process(self, field):
         self._set_label()
+        self._process_enum_to_option(field)
 
     def _set_label(self):
         if not self.label and self.name:
             self.label = PFPTStringUtil.human_readable(self.name)
+
+    def _process_enum_to_option(self, field):
+        if not self.selectOptions and hasattr(field, "enumType"):
+            for enumItem in field.enumType:
+                self.selectOptions[enumItem.value] = enumItem.name
