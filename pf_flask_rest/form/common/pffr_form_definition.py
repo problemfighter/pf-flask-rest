@@ -32,8 +32,8 @@ class FormDefinition:
 
     def set_model_value(self, model):
         for field_name in self._field_datatype_dict:
-            model_data = getattr(model, field_name)
-            if hasattr(self, field_name):
+            if hasattr(self, field_name) and hasattr(model, field_name):
+                model_data = getattr(model, field_name)
                 field_definition = getattr(self, field_name)
                 field_definition.value = model_data
 
