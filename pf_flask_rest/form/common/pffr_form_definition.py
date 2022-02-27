@@ -49,7 +49,8 @@ class FormDefinition:
         return self
 
     def _set_field_definition(self, field):
-        setattr(self, field.name, self._init_field_definition(field))
+        if field.name:
+            setattr(self, field.name, self._init_field_definition(field))
 
     def _init_field_definition(self, field):
         definition = FieldData()
