@@ -50,3 +50,14 @@ class RequestProcessor:
             self.validate_data(json_obj, api_def)
         return json_obj
 
+    def get_form_data(self, api_def: APIPrimeDef, is_validate=True, is_populate_model=False):
+        form_data = self.request_helper.form_and_file_data()
+        if not form_data:
+            raise pffrc_exception.error_message_exception(
+                PFFRMessageConfig.invalid_request_data, code=PFFRCResponseCode.error
+            )
+        if is_validate:
+            model = self.populate_model(form_data, api_def)
+            if is_populate_model:
+                return model
+        return form_data
