@@ -14,6 +14,7 @@ class RequestProcessor:
 
     def validate_data(self, data: dict, api_def: APIPrimeDef, session=sessions):
         try:
+            api_def.unknown = EXCLUDE
             errors = api_def.validate(data, session=session)
             if errors:
                 errors = pffr_exception_handler.process_validation_error(errors)
