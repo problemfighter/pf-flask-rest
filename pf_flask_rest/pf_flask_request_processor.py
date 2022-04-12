@@ -12,9 +12,9 @@ class RequestProcessor:
 
     request_helper: RequestHelper = RequestHelper()
 
-    def validate_data(self, data: dict, api_def: APIPrimeDef, session=sessions):
+    def validate_data(self, data: dict, api_def: APIPrimeDef, session=sessions, unknown=EXCLUDE):
         try:
-            api_def.unknown = EXCLUDE
+            api_def.unknown = unknown
             errors = api_def.validate(data, session=session)
             if errors:
                 errors = pffr_exception_handler.process_validation_error(errors)
