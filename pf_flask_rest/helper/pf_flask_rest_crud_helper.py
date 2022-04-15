@@ -60,3 +60,14 @@ class RestCRUDHelper:
             sort_default_order=sort_default_order, item_per_page=item_per_page
         )
         return self.response_processor.paginate_response(data_list, response_def)
+
+    def rest_list(self,
+                  response_def: APIPrimeDef, query=None, search_fields: list = None,
+                  sort_default_field=PFFRConfig.sort_default_field,
+                  sort_default_order=PFFRConfig.sort_default_order
+                  ):
+        data_list = self.crud_helper.list(
+            model=self.model, query=query, search_fields=search_fields, sort_default_field=sort_default_field,
+            sort_default_order=sort_default_order, enable_pagination=False
+        )
+        return self.response_processor.list_response(data_list, response_def)

@@ -49,8 +49,12 @@ class ResponseProcessor:
         response.add_data(model.items, response_def, True)
         return self.response_helper.json_string_response(response.to_dict(), headers=self.headers)
 
-    def list_response(self):
-        pass
+    def list_response(self, model: BaseModel, response_def: APIPrimeDef, status: str = PFFRCResponseStatus.success, code: str = PFFRCResponseCode.success, http_code=200):
+        data_response = PFFRCDataResponse()
+        data_response.status = status
+        data_response.code = code
+        data_response.add_data(model, response_def, True)
+        return self.response_helper.json_string_response(data_response.to_dict(), http_code, self.headers)
 
     def dict_response(self, data: dict, status: str = PFFRCResponseStatus.success, code: str = PFFRCResponseCode.success, http_code=200):
         data_response = PFFRCDataResponse()
