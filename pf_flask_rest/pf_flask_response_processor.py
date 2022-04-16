@@ -46,7 +46,8 @@ class ResponseProcessor:
         response.status = PFFRCResponseStatus.success
         response.code = PFFRCResponseCode.success
         response.pagination = pagination
-        response.add_data(model.items, response_def, True)
+        response.data = model.items
+        response.add_only_data(model.items, response_def, True)
         return self.response_helper.json_string_response(response.to_dict(), headers=self.headers)
 
     def list_response(self, model: BaseModel, response_def: APIPrimeDef, status: str = PFFRCResponseStatus.success, code: str = PFFRCResponseCode.success, http_code=200):
