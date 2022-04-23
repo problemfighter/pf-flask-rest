@@ -28,11 +28,15 @@ class ResponseProcessor:
     def error_message(self, message: str, code: str = PFFRCResponseCode.error, http_code=200):
         return self.message(message, PFFRCResponseStatus.error, code, http_code)
 
-    def data_response(self, model: BaseModel, response_def: APIPrimeDef, many=False, status: str = PFFRCResponseStatus.success, code: str = PFFRCResponseCode.success, http_code=200):
+    def data_response_dict(self, model: BaseModel, response_def: APIPrimeDef, many=False, status: str = PFFRCResponseStatus.success, code: str = PFFRCResponseCode.success):
         data_response = PFFRCDataResponse()
         data_response.status = status
         data_response.code = code
         data_response.add_data(model, response_def, many)
+        return data_response
+
+    def data_response(self, model: BaseModel, response_def: APIPrimeDef, many=False, status: str = PFFRCResponseStatus.success, code: str = PFFRCResponseCode.success, http_code=200):
+        data_response = self.data_response_dict(model=model, response_def=response_def, many=many, status=status, code=code)
         return self.response_helper.json_string_response(data_response.to_dict(), http_code, self.headers)
 
     def paginate_response(self, model: BaseModel, response_def: APIPrimeDef):
