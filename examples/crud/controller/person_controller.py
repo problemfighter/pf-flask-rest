@@ -37,4 +37,4 @@ def restore(id: int):
 
 @person_controller.route("/list", methods=['GET'])
 def list():
-    return person_service.list()
+    return person_service.list
