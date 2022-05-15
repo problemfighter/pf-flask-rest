@@ -30,9 +30,12 @@ class RequestProcessor:
                 details=errors
             )
 
+    def load_model_from_dict(self, data: dict, api_def: APIPrimeDef, session=sessions, instance=None):
+        return api_def.load(data, session=session, instance=instance, unknown=EXCLUDE)
+
     def populate_model(self, data: dict, api_def: APIPrimeDef, session=sessions, instance=None):
         try:
-            return api_def.load(data, session=session, instance=instance, unknown=EXCLUDE)
+            return self.load_model_from_dict(data, api_def, session, instance)
         except ValidationError as error:
             errors = pffr_exception_handler.process_validation_error(error.messages)
             raise pffrc_exception.error_details_exception(
