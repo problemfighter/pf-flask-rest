@@ -15,13 +15,20 @@ class RestCRUDHelper:
     def __init__(self, model: BaseModel):
         self.model = model
 
-    def rest_create(self, request_def: APIPrimeDef, response_def: APIPrimeDef = None, response_message: str = "Successfully created!"):
+    def create(self, request_def: APIPrimeDef):
         data = self.request_processor.get_rest_json_data(request_def)
         model = self.request_processor.populate_model(data, request_def)
         model.save()
+        return model
+
+    def rest_create_response(self, model, response_def: APIPrimeDef = None, response_message: str = "Successfully created!"):
         if not response_def:
             return self.response_processor.success_message(response_message)
         return self.response_processor.data_response(model, response_def)
+
+    def rest_create(self, request_def: APIPrimeDef, response_def: APIPrimeDef = None, response_message: str = "Successfully created!"):
+        model = self.create(request_def)
+        return self.rest_create_response(model, response_def, response_message)
 
     def rest_update(self, request_def: APIPrimeDef, response_def: APIPrimeDef = None, response_message: str = "Successfully updated!", existing_model=None):
         data = self.request_processor.get_rest_json_data(request_def)
