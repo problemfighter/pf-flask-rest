@@ -1,4 +1,3 @@
-from pf_flask_file.pfff_ffmpeg_helper import FFMPEGHelper
 from pf_flask_file.pfff_file_upload_man import PFFFFileUploadMan
 from pf_flask_rest.api.pf_app_api_def import APIPrimeDef
 from pf_flask_rest.helper.pf_flask_crud_helper import CRUDHelper
@@ -9,7 +8,6 @@ from pf_py_common.py_common import PyCommon
 
 class RestFileHelper:
     file_upload_man = PFFFFileUploadMan()
-    ffmpeg_helper = FFMPEGHelper()
     request_processor = RequestProcessor()
     crud_helper = CRUDHelper()
 
