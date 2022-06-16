@@ -1,6 +1,9 @@
+import traceback
+
 from pf_flask_rest.common.pf_flask_rest_config import PFFRConfig
 from pf_flask_rest.helper.pf_flask_crud_helper import CRUDHelper
 from pf_flask_db.pf_app_model import BaseModel
+from pf_flask_rest.helper.pf_flask_rest_file_helper import RestFileHelper
 from pf_flask_rest.pf_flask_response_processor import ResponseProcessor
 from pf_flask_rest.pf_flask_request_processor import RequestProcessor
 from pf_flask_rest.api.pf_app_api_def import APIPrimeDef
@@ -11,6 +14,7 @@ class RestCRUDHelper:
     request_processor = RequestProcessor()
     response_processor = ResponseProcessor()
     crud_helper = CRUDHelper()
+    rest_file_helper = RestFileHelper()
 
     def __init__(self, model: BaseModel):
         self.model = model
@@ -85,3 +89,11 @@ class RestCRUDHelper:
             sort_default_order=sort_default_order, enable_pagination=False
         )
         return self.response_processor.list_response(data_list, response_def)
+
+    def create_upload_single_file(self, request_def: APIPrimeDef, upload_path, response_def: APIPrimeDef = None, response_message: str = "Successfully created!"):
+        model = self.rest_file_helper.create_upload_single_file(request_def, upload_path)
+        return self.rest_create_response(model, response_def, response_message)
+
+    def update_upload_single_file(self, request_def: APIPrimeDef, upload_path, response_def: APIPrimeDef = None, response_message: str = "Successfully updated!"):
+        model = self.rest_file_helper.update_upload_single_file(self.model, request_def, upload_path)
+        return self.rest_update_response(model, response_def, response_message)
