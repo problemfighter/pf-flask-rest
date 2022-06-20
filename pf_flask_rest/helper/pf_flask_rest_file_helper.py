@@ -1,9 +1,14 @@
+import os.path
+
+from werkzeug.datastructures import FileStorage
+
 from pf_flask_file.pfff_file_upload_man import PFFFFileUploadMan
 from pf_flask_rest.api.pf_app_api_def import APIPrimeDef
 from pf_flask_rest.helper.pf_flask_crud_helper import CRUDHelper
 from pf_flask_rest.pf_flask_request_processor import RequestProcessor
 from pf_flask_rest_com.api_def import FileField
 from pf_py_common.py_common import PyCommon
+from pf_py_file.pfpf_file_util import PFPFFileUtil
 
 
 class RestFileHelper:
@@ -26,6 +31,15 @@ class RestFileHelper:
         file_names = self.file_upload_man.validate_and_upload_multiple(form_data, request_def, upload_path, override_name=override_names)
         return file_names
 
+    def deal_single_file_deleted(self, override_names: dict, form_data, model, upload_path):
+        for name in override_names:
+            if "deletedItem" in form_data and name in form_data["deletedItem"]:
+                if hasattr(model, name) and (name not in form_data or not isinstance(form_data[name], FileStorage)):
+                    file_path = os.path.join(upload_path, getattr(model, name))
+                    setattr(model, name, None)
+                    PFPFFileUtil.delete_file(file_path)
+        return model
+
     def process_single_file_upload(self, uuid, upload_path, request_def: APIPrimeDef, existing_model=None):
         form_data = self.request_processor.get_form_data(request_def)
         model = self.request_processor.populate_model(form_data, request_def, instance=existing_model)
@@ -37,6 +51,7 @@ class RestFileHelper:
             if hasattr(model, name) and name in file_names:
                 file_name = file_names[name][override_names[name]]
                 setattr(model, name, file_name)
+        model = self.deal_single_file_deleted(override_names=override_names, form_data=form_data, model=model, upload_path=upload_path)
         model.save()
         return model
 
