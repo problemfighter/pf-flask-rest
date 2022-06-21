@@ -1,7 +1,5 @@
 import os.path
-
 from werkzeug.datastructures import FileStorage
-
 from pf_flask_file.pfff_file_upload_man import PFFFFileUploadMan
 from pf_flask_rest.api.pf_app_api_def import APIPrimeDef
 from pf_flask_rest.helper.pf_flask_crud_helper import CRUDHelper
