@@ -1,7 +1,5 @@
 from sqlalchemy import or_, and_
-
 from pf_flask_db.pf_app_model import BaseModel
-from pf_flask_rest.api.pf_app_api_def import APIPrimeDef
 from pf_flask_rest.common.pf_flask_rest_config import PFFRConfig
 from pf_flask_rest_com.common.pffr_exception import pffrc_exception
 from pf_flask_rest_com.pf_flask_request_helper import RequestHelper
