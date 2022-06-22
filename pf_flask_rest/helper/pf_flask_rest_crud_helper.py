@@ -19,6 +19,9 @@ class RestCRUDHelper:
     def __init__(self, model: BaseModel):
         self.model = model
 
+    def get_by_id(self, model_id, exception=True):
+        return self.crud_helper.get_by_id(self.model, id=model_id, exception=exception)
+
     def create(self, request_def: APIPrimeDef):
         data = self.request_processor.get_rest_json_data(request_def)
         model = self.request_processor.populate_model(data, request_def)
