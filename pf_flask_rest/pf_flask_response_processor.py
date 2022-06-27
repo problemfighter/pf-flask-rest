@@ -68,6 +68,14 @@ class ResponseProcessor:
         data_response.data = data
         return self.response_helper.json_string_response(data_response.to_dict(), http_code, self.headers)
 
+    def list_data_response(self, data: list, status: str = PFFRCResponseStatus.success, code: str = PFFRCResponseCode.success, http_code=200):
+        data_response = PFFRCDataResponse()
+        data_response.status = status
+        data_response.code = code
+        data_response.data = data
+        data_response.add_data(None, None, True)
+        return self.response_helper.json_string_response(data_response.to_dict(), http_code, self.headers)
+
 
 
 
