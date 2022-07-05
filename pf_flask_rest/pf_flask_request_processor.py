@@ -65,3 +65,11 @@ class RequestProcessor:
             if is_populate_model:
                 return model
         return form_data
+
+    def get_query_param(self, name, exception=True, exception_message=None, default=None, type=None):
+        value = self.request_helper.get_query_params_value(name, default=default, type=type)
+        if not value and exception:
+            if not exception_message:
+                exception_message = name + " not found"
+            raise pffrc_exception.error_message_exception(exception_message)
+        return value
