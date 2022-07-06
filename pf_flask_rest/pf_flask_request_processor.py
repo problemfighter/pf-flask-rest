@@ -61,9 +61,9 @@ class RequestProcessor:
                 PFFRMessageConfig.invalid_request_data, code=PFFRCResponseCode.error
             )
         if is_validate:
-            model = self.validate_data(form_data, api_def)
+            data = self.validate_data(form_data, api_def)
             if is_populate_model:
-                return model
+                return self.load_model_from_dict(data, api_def)
         return form_data
 
     def get_query_param(self, name, exception=True, exception_message=None, default=None, type=None):
