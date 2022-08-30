@@ -38,8 +38,9 @@ class RestFileHelper:
                     PFPFFileUtil.delete_file(file_path)
         return model
 
-    def process_single_file_upload(self, uuid, upload_path, request_def: APIPrimeDef, existing_model=None):
-        form_data = self.request_processor.get_form_data(request_def)
+    def process_single_file_upload(self, uuid, upload_path, request_def: APIPrimeDef, existing_model=None, form_data=None):
+        if not form_data:
+            form_data = self.request_processor.get_form_data(request_def)
         model = self.request_processor.populate_model(form_data, request_def, instance=existing_model)
         if not model.uuid:
             model.uuid = uuid
@@ -53,9 +54,9 @@ class RestFileHelper:
         model.save()
         return model
 
-    def create_upload_single_file(self, request_def: APIPrimeDef, upload_path):
+    def create_upload_single_file(self, request_def: APIPrimeDef, upload_path, form_data=None):
         uuid = PyCommon.uuid()
-        return self.process_single_file_upload(uuid, upload_path, request_def)
+        return self.process_single_file_upload(uuid, upload_path, request_def, form_data=form_data)
 
     def update_upload_single_file(self, model_class, request_def: APIPrimeDef, upload_path):
         form_data = self.request_processor.get_form_data(request_def)
