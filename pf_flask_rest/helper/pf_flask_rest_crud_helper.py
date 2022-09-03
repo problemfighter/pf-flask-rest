@@ -22,8 +22,9 @@ class RestCRUDHelper:
     def get_by_id(self, model_id, exception=True):
         return self.crud_helper.get_by_id(self.model, id=model_id, exception=exception)
 
-    def create(self, request_def: APIPrimeDef):
-        data = self.request_processor.get_rest_json_data(request_def)
+    def create(self, request_def: APIPrimeDef, data: dict = None):
+        if not data:
+            data = self.request_processor.get_rest_json_data(request_def)
         model = self.request_processor.populate_model(data, request_def)
         model.save()
         return model
@@ -33,8 +34,8 @@ class RestCRUDHelper:
             return self.response_processor.success_message(response_message)
         return self.response_processor.data_response(model, response_def)
 
-    def rest_create(self, request_def: APIPrimeDef, response_def: APIPrimeDef = None, response_message: str = "Successfully created!"):
-        model = self.create(request_def)
+    def rest_create(self, request_def: APIPrimeDef, response_def: APIPrimeDef = None, response_message: str = "Successfully created!", data: dict = None):
+        model = self.create(request_def, data)
         return self.rest_create_response(model, response_def, response_message)
 
     def update(self, request_def: APIPrimeDef, existing_model=None):
