@@ -38,10 +38,11 @@ class RestCRUDHelper:
         model = self.create(request_def, data)
         return self.rest_create_response(model, response_def, response_message)
 
-    def update(self, request_def: APIPrimeDef, existing_model=None):
-        data = self.request_processor.get_rest_json_data(request_def)
+    def update(self, request_def: APIPrimeDef, existing_model=None, data: dict = None, query=None):
+        if not data:
+            data = self.request_processor.get_rest_json_data(request_def)
         if not existing_model:
-            existing_model = self.crud_helper.get_by_id(self.model, data['id'], exception=True)
+            existing_model = self.crud_helper.get_by_id(self.model, data['id'], exception=True, query=query)
         model = self.request_processor.populate_model(data, request_def, instance=existing_model)
         model.save()
         return model
@@ -51,24 +52,24 @@ class RestCRUDHelper:
             return self.response_processor.success_message(response_message)
         return self.response_processor.data_response(model, response_def)
 
-    def rest_update(self, request_def: APIPrimeDef, response_def: APIPrimeDef = None, response_message: str = "Successfully updated!", existing_model=None):
-        model = self.update(request_def, existing_model)
+    def rest_update(self, request_def: APIPrimeDef, response_def: APIPrimeDef = None, response_message: str = "Successfully updated!", existing_model=None, data: dict = None, query=None):
+        model = self.update(request_def, existing_model, data=data, query=query)
         return self.rest_update_response(model, response_def, response_message)
 
-    def rest_delete(self, model_id: int, response_message: str = "Successfully deleted!"):
-        existing_model = self.crud_helper.get_by_id(self.model, model_id, exception=True)
+    def rest_delete(self, model_id: int, response_message: str = "Successfully deleted!", query=None):
+        existing_model = self.crud_helper.get_by_id(self.model, model_id, exception=True, query=query)
         existing_model.isDeleted = True
         existing_model.save()
         return self.response_processor.success_message(response_message)
 
-    def rest_restore(self, model_id: int, response_message: str = "Successfully restored!"):
-        existing_model = self.crud_helper.get_by_id(self.model, model_id, is_deleted=True, exception=True)
+    def rest_restore(self, model_id: int, response_message: str = "Successfully restored!", query=None):
+        existing_model = self.crud_helper.get_by_id(self.model, model_id, is_deleted=True, exception=True, query=query)
         existing_model.isDeleted = False
         existing_model.save()
         return self.response_processor.success_message(response_message)
 
-    def rest_details(self, model_id: int, response_def: APIPrimeDef):
-        existing_model = self.crud_helper.get_by_id(self.model, model_id, exception=True)
+    def rest_details(self, model_id: int, response_def: APIPrimeDef, query=None):
+        existing_model = self.crud_helper.get_by_id(self.model, model_id, exception=True, query=query)
         return self.response_processor.data_response(existing_model, response_def)
 
     def rest_paginated_list(self,

@@ -9,8 +9,10 @@ class CRUDHelper:
 
     request_helper: RequestHelper = RequestHelper()
 
-    def get_by_id(self, model: BaseModel, id: int, is_deleted: bool = False, exception: bool = False, message: str = "Entry Not Found!"):
-        result = model.query.filter(and_(model.id == id, model.isDeleted == is_deleted)).first()
+    def get_by_id(self, model: BaseModel, id: int, is_deleted: bool = False, exception: bool = False, message: str = "Entry Not Found!", query=None):
+        if not query:
+            query = model.query
+        result = query.filter(and_(model.id == id, model.isDeleted == is_deleted)).first()
         if result:
             return result
         if not result and exception:
