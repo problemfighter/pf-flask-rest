@@ -101,8 +101,8 @@ class RestCRUDHelper:
             return self.rest_create_response(model, response_def, response_message)
         return model
 
-    def update_upload_single_file(self, request_def: APIPrimeDef, upload_path, response_def: APIPrimeDef = None, response_message: str = "Successfully updated!", api_response: bool = True):
-        model = self.rest_file_helper.update_upload_single_file(self.model, request_def, upload_path)
+    def update_upload_single_file(self, request_def: APIPrimeDef, upload_path, response_def: APIPrimeDef = None, response_message: str = "Successfully updated!", api_response: bool = True, form_data=None):
+        model = self.rest_file_helper.update_upload_single_file(self.model, request_def, upload_path, form_data=form_data)
         if api_response:
             return self.rest_update_response(model, response_def, response_message)
         return model

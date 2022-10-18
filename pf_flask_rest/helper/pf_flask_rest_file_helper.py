@@ -58,8 +58,9 @@ class RestFileHelper:
         uuid = PyCommon.uuid()
         return self.process_single_file_upload(uuid, upload_path, request_def, form_data=form_data)
 
-    def update_upload_single_file(self, model_class, request_def: APIPrimeDef, upload_path):
-        form_data = self.request_processor.get_form_data(request_def)
+    def update_upload_single_file(self, model_class, request_def: APIPrimeDef, upload_path, form_data=None):
+        if not form_data:
+            form_data = self.request_processor.get_form_data(request_def)
         existing_model = self.crud_helper.get_by_id(model_class, form_data['id'], exception=True)
         return self.process_single_file_upload(existing_model.uuid, upload_path, request_def, existing_model=existing_model)
 
