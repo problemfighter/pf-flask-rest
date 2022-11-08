@@ -11,7 +11,7 @@ class PFFRExceptionHandler:
         for message in errors:
             error_text = ""
             for text in errors[message]:
-                error_text += text + " "
+                error_text += str(text) + " "
             message_dict[message] = error_text
         return message_dict
 
