@@ -1,3 +1,4 @@
+from copy import copy
 from flask import sessions
 from marshmallow import ValidationError, EXCLUDE
 from pf_flask_rest.api.pf_app_api_def import APIPrimeDef
@@ -33,6 +34,12 @@ class RequestProcessor:
     def load_model_from_dict(self, data: dict, api_def: APIPrimeDef, session=sessions, instance=None):
         return api_def.load(data, session=session, instance=instance, unknown=EXCLUDE)
 
+    def load_only_from_dict(self, data: dict, api_def: APIPrimeDef, instance=None):
+        modified_api_def = copy(api_def)
+        if hasattr(modified_api_def, "_load_instance"):
+            setattr(modified_api_def, "_load_instance", False)
+        return modified_api_def.load(data, instance=instance, unknown=EXCLUDE)
+
     def populate_model(self, data: dict, api_def: APIPrimeDef, session=sessions, instance=None):
         try:
             return self.load_model_from_dict(data, api_def, session, instance)
@@ -43,7 +50,7 @@ class RequestProcessor:
                 details=errors
             )
 
-    def get_rest_json_data(self, api_def: APIPrimeDef, is_validate=True):
+    def get_rest_json_data(self, api_def: APIPrimeDef, is_validate=True, load_only=False):
         json_obj = self.request_helper.json_data()
         if not json_obj or PFFRConfig.json_root_node not in json_obj:
             raise pffrc_exception.error_message_exception(
@@ -52,6 +59,9 @@ class RequestProcessor:
         json_obj = json_obj[PFFRConfig.json_root_node]
         if is_validate:
             self.validate_data(json_obj, api_def)
+
+        if load_only:
+            return self.load_only_from_dict(json_obj, api_def)
         return json_obj
 
     def get_form_data(self, api_def: APIPrimeDef, is_validate=True, is_populate_model=False):
