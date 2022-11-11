@@ -61,11 +61,12 @@ class ResponseProcessor:
         data_response.add_data(model, response_def, True)
         return self.response_helper.json_string_response(data_response.to_dict(), http_code, self.headers)
 
-    def dict_response(self, data: dict, status: str = PFFRCResponseStatus.success, code: str = PFFRCResponseCode.success, http_code=200):
+    def dict_response(self, data: dict, status: str = PFFRCResponseStatus.success, code: str = PFFRCResponseCode.success, http_code=200, message=None):
         data_response = PFFRCDataResponse()
         data_response.status = status
         data_response.code = code
         data_response.data = data
+        data_response.message = message
         return self.response_helper.json_string_response(data_response.to_dict(), http_code, self.headers)
 
     def list_data_response(self, data: list, status: str = PFFRCResponseStatus.success, code: str = PFFRCResponseCode.success, http_code=200):
