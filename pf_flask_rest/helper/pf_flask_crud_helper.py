@@ -66,4 +66,32 @@ class CRUDHelper:
                 return query.filter(or_(*like))
         return query
 
+    def get_by_ids(self, model: BaseModel, ids, is_deleted: bool = False, exception: bool = False, message: str = "Not Found!", query=None):
+        if not query:
+            query = model.query
+        result = query.filter(and_(model.id.in_(ids), model.isDeleted == is_deleted)).all()
+        if result:
+            return result
+        if not result and exception:
+            raise pffrc_exception.error_message_exception(message)
+        return None
 
+    def get_not_in_by_ids(self, model: BaseModel, ids, is_deleted: bool = False, exception: bool = False, message: str = "Not Found!", query=None):
+        if not query:
+            query = model.query
+        result = query.filter(and_(model.id.not_in(ids), model.isDeleted == is_deleted)).all()
+        if result:
+            return result
+        if not result and exception:
+            raise pffrc_exception.error_message_exception(message)
+        return None
+
+    def delete_by_ids_not_in(self, model: BaseModel, ids, query=None):
+        if not query:
+            query = model.query
+        query.filter(and_(model.id.not_in(ids))).delete()
+
+    def delete_by_ids_in(self, model: BaseModel, ids, query=None):
+        if not query:
+            query = model.query
+        query.filter(and_(model.id.in_(ids))).delete()
