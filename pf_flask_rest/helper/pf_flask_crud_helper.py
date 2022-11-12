@@ -3,6 +3,7 @@ from pf_flask_db.pf_app_model import BaseModel
 from pf_flask_rest.common.pf_flask_rest_config import PFFRConfig
 from pf_flask_rest_com.common.pffr_exception import pffrc_exception
 from pf_flask_rest_com.pf_flask_request_helper import RequestHelper
+from pf_flask_web.system12.pweb_db import pweb_db
 
 
 class CRUDHelper:
@@ -90,8 +91,10 @@ class CRUDHelper:
         if not query:
             query = model.query
         query.filter(and_(model.id.not_in(ids))).delete()
+        pweb_db.session.commit()
 
     def delete_by_ids_in(self, model: BaseModel, ids, query=None):
         if not query:
             query = model.query
         query.filter(and_(model.id.in_(ids))).delete()
+        pweb_db.session.commit()
