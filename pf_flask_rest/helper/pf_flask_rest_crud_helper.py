@@ -22,6 +22,9 @@ class RestCRUDHelper:
     def get_json_data(self, request_def: APIPrimeDef, is_validate=True, load_only=False):
         return self.request_processor.get_rest_json_data(request_def, is_validate=is_validate, load_only=load_only)
 
+    def get_form_data(self, request_def: APIPrimeDef, is_validate=True, load_only=False, is_populate_model=False):
+        return self.request_processor.get_form_data(request_def, is_validate=is_validate, is_populate_model=is_populate_model)
+
     def check_unique(self, field: str, value, model_id=None, exception: bool = True, message: str = "Already used", query=None):
         self.crud_helper.check_unique(self.model, field=field, value=value, exception=exception, message=message, query=query, model_id=model_id)
 
