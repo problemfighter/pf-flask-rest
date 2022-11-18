@@ -98,3 +98,13 @@ class CRUDHelper:
             query = model.query
         query.filter(and_(model.id.in_(ids))).delete()
         pweb_db.session.commit()
+
+    def check_unique(self, model: BaseModel, field: str, value, model_id=None, exception: bool = True, message: str = "Already used", query=None):
+        if not query:
+            query = model.query
+        query = query.filter(getattr(model, field) == value)
+        if model_id:
+            query = query.filter(model.id != model_id)
+        result = query.first()
+        if result and exception:
+            raise pffrc_exception.error_details_exception("Unique filed error", details={field: message})
