@@ -71,6 +71,11 @@ class RestCRUDHelper:
         existing_model.save()
         return self.response_processor.success_message(response_message)
 
+    def rest_hard_delete(self, model_id: int, response_message: str = "Successfully deleted!", query=None):
+        existing_model = self.crud_helper.get_by_id(self.model, model_id, exception=True, query=query)
+        existing_model.delete()
+        return self.response_processor.success_message(response_message)
+
     def rest_restore(self, model_id: int, response_message: str = "Successfully restored!", query=None):
         existing_model = self.crud_helper.get_by_id(self.model, model_id, is_deleted=True, exception=True, query=query)
         existing_model.isDeleted = False
