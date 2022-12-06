@@ -39,20 +39,27 @@ class ResponseProcessor:
         data_response = self.data_response_dict(model=model, response_def=response_def, many=many, status=status, code=code)
         return self.response_helper.json_string_response(data_response.to_dict(), http_code, self.headers)
 
-    def paginate_response(self, model: BaseModel, response_def: APIPrimeDef):
+    def set_pagination_data(self, model: BaseModel):
         pagination = PFFRCPagination()
         pagination.page = model.page
         pagination.totalPage = model.pages
         pagination.itemPerPage = model.per_page
         pagination.total = model.total
+        return pagination
 
+    def paginate_response_dict(self, model: BaseModel, response_def: APIPrimeDef):
+        pagination = self.set_pagination_data(model)
         response = PFFRCPaginateResponse()
         response.status = PFFRCResponseStatus.success
         response.code = PFFRCResponseCode.success
         response.pagination = pagination
         response.data = model.items
         response.add_only_data(model.items, response_def, True)
-        return self.response_helper.json_string_response(response.to_dict(), headers=self.headers)
+        return response.to_dict()
+
+    def paginate_response(self, model: BaseModel, response_def: APIPrimeDef):
+        response_dict = self.paginate_response_dict(model, response_def)
+        return self.response_helper.json_string_response(response_dict, headers=self.headers)
 
     def list_response(self, model: BaseModel, response_def: APIPrimeDef, status: str = PFFRCResponseStatus.success, code: str = PFFRCResponseCode.success, http_code=200):
         data_response = PFFRCDataResponse()
