@@ -58,3 +58,13 @@ class FieldData(object):
         if not self.selectOptions and hasattr(field, "enumType"):
             for enumItem in field.enumType:
                 self.selectOptions[enumItem.value] = enumItem.name
+
+    def is_checked(self, value):
+        if self.value == value:
+            return "checked"
+        return ""
+
+    def is_selected(self, value):
+        if self.value == value:
+            return "selected"
+        return ""
