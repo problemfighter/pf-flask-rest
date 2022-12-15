@@ -37,6 +37,13 @@ class FormDefinition:
                 field_definition = getattr(self, field_name)
                 field_definition.value = model_data
 
+    def set_dict_value(self, values: dict):
+        for field_name in self._field_datatype_dict:
+            if field_name in values:
+                model_data = values[field_name]
+                field_definition = getattr(self, field_name)
+                field_definition.value = model_data
+
     def cast_set_request_value(self, values: dict):
         for field_name in self._field_datatype_dict:
             if field_name in values and hasattr(self, field_name):
