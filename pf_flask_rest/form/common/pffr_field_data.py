@@ -20,6 +20,7 @@ class FieldData(object):
     selectOptions: dict = {}
     selectDefault: str = None
     isMultiSelect: bool = False
+    isIgnoreLabel: bool = False
 
     def process_data(self, field):
         self._process_metadata(field.metadata)
@@ -50,7 +51,7 @@ class FieldData(object):
         self._process_enum_to_option(field)
 
     def _set_label(self):
-        if not self.label and self.name:
+        if not self.label and self.name and not self.isIgnoreLabel:
             self.label = PFPTStringUtil.human_readable(self.name)
 
     def _process_enum_to_option(self, field):
