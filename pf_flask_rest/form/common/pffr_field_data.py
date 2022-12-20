@@ -18,6 +18,7 @@ class FieldData(object):
     topAttrClass: str = ""
     inputAttrClass: str = ""
     selectOptions: dict = {}
+    selectOptionHTML: str = None
     selectDefault: str = None
     isMultiSelect: bool = False
     isIgnoreLabel: bool = False
