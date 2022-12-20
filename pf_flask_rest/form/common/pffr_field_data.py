@@ -17,6 +17,7 @@ class FieldData(object):
     inputAttr: str = ""
     topAttrClass: str = ""
     inputAttrClass: str = ""
+    attributes: str = ""
     selectOptions: dict = {}
     selectOptionHTML: str = None
     selectDefault: str = None
