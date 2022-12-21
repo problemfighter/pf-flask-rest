@@ -50,8 +50,9 @@ class RequestProcessor:
                 details=errors
             )
 
-    def get_rest_json_data(self, api_def: APIPrimeDef, is_validate=True, load_only=False):
-        json_obj = self.request_helper.json_data()
+    def get_rest_json_data(self, api_def: APIPrimeDef, is_validate=True, load_only=False, json_obj=None):
+        if not json_obj:
+            json_obj = self.request_helper.json_data()
         if not json_obj or PFFRConfig.json_root_node not in json_obj:
             raise pffrc_exception.error_message_exception(
                 PFFRMessageConfig.invalid_request_data, code=PFFRCResponseCode.error
