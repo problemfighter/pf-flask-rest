@@ -65,8 +65,9 @@ class RequestProcessor:
             return self.load_only_from_dict(json_obj, api_def)
         return json_obj
 
-    def get_form_data(self, api_def: APIPrimeDef, is_validate=True, is_populate_model=False):
-        form_data = self.request_helper.form_and_file_data()
+    def get_form_data(self, api_def: APIPrimeDef, is_validate=True, is_populate_model=False, load_only=False, form_data=None):
+        if not form_data:
+            form_data = self.request_helper.form_and_file_data()
         if not form_data:
             raise pffrc_exception.error_message_exception(
                 PFFRMessageConfig.invalid_request_data, code=PFFRCResponseCode.error
@@ -75,6 +76,9 @@ class RequestProcessor:
             data = self.validate_data(form_data, api_def)
             if is_populate_model:
                 return self.load_model_from_dict(data, api_def)
+
+        if load_only:
+            return self.load_only_from_dict(form_data, api_def)
         return form_data
 
     def get_query_param(self, name, exception=True, exception_message=None, default=None, type=None):
