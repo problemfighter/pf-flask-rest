@@ -1,4 +1,4 @@
-from marshmallow import missing
+from marshmallow import missing, ValidationError
 from werkzeug.utils import redirect
 from pf_flask_db.pf_app_model import BaseModel
 from pf_flask_rest.api.pf_app_api_def import APIBaseDef
@@ -13,18 +13,27 @@ class FormAction(APIBaseDef):
     request_processor: RequestProcessor = RequestProcessor()
     request_helper: RequestHelper = RequestHelper()
 
+    def cast_and_set_value(self, form_data):
+        self.definition.cast_set_request_value(form_data)
+        self.set_property()
+
     def is_valid_data(self) -> bool:
-        form_data = self.get_requested_data()
+        form_data = self.get_requested_raw_data()
         if form_data and self.definition:
+            self.cast_and_set_value(form_data)
             try:
-                self.definition.cast_set_request_value(form_data)
-                self.request_processor.validate_data(self.definition.filtered_field_dict, self)
-                self.set_property()
+                form_data = self.get_requested_data()
+                self.cast_and_set_value(form_data)
                 return True
             except PFFRCException as e:
                 if e.messageResponse and e.messageResponse.error:
                     self.definition.set_field_errors(e.messageResponse.error)
-
+            except ValidationError as e:
+                errors = {}
+                if e and e.messages_dict and isinstance(e.messages_dict, dict):
+                    for name, error in e.messages_dict.items():
+                        errors[name] = ', '.join(error)
+                self.definition.set_field_errors(errors)
         return False
 
     def is_post_request(self) -> bool:
@@ -45,7 +54,10 @@ class FormAction(APIBaseDef):
         self.definition.set_model_value(model)
 
     def get_requested_data(self):
-        return self.request_processor.get_form_data(api_def=self, load_only=True)
+        return self.request_processor.get_form_data(api_def=self, load_only=True, is_validate=True)
+
+    def get_requested_raw_data(self):
+        return self.request_helper.form_and_file_data()
 
     def set_property(self):
         for field_name in self.fields:
