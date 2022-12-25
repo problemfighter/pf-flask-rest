@@ -45,7 +45,7 @@ class FormAction(APIBaseDef):
         self.definition.set_model_value(model)
 
     def get_requested_data(self):
-        return self.request_helper.form_and_file_data()
+        return self.request_processor.get_form_data(api_def=self, load_only=True)
 
     def set_property(self):
         for field_name in self.fields:
