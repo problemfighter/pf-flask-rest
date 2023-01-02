@@ -24,6 +24,10 @@ class FieldData(object):
     isMultiSelect: bool = False
     isIgnoreLabel: bool = False
 
+    def __init__(self):
+        self.selectOptions = {}
+        self.selectOptionHTML = None
+
     def process_data(self, field):
         self._process_metadata(field.metadata)
         self._process_attr(["topAttr", "inputAttr"])
