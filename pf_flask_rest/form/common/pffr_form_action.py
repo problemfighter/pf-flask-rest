@@ -53,8 +53,11 @@ class FormAction(APIBaseDef):
     def set_model_data(self, model: BaseModel):
         self.definition.set_model_value(model)
 
+    def get_data(self):
+        return self.definition.filtered_field_dict
+
     def get_requested_data(self):
-        return self.request_processor.get_form_data(api_def=self, load_only=True, is_validate=True)
+        return self.request_processor.get_form_data(api_def=self, load_only=True, is_validate=True, form_data=self.definition.filtered_field_dict)
 
     def get_requested_raw_data(self):
         return self.request_helper.form_and_file_data()
