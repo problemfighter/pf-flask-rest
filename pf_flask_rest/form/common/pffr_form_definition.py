@@ -78,11 +78,11 @@ class FormDefinition:
     def _cast_value(self, datatype, value, field_name):
         definition = getattr(self, field_name)
         if datatype == "Integer":
-            self._cast_int(value, field_name)
+            value = self._cast_int(value, field_name)
         elif datatype == "Float":
-            self._cast_float(value, field_name)
+            value = self._cast_float(value, field_name)
         elif datatype == "Boolean":
-            self._cast_boolean(value, field_name)
+            value = self._cast_boolean(value, field_name)
         elif not definition.required:
             self.filtered_field_dict[field_name] = value
         elif definition.required and value != "":
@@ -93,13 +93,19 @@ class FormDefinition:
 
     def _cast_int(self, value, field_name):
         if value != "":
-            self.filtered_field_dict[field_name] = int(value)
+            value = int(value)
+            self.filtered_field_dict[field_name] = value
+        return value
 
     def _cast_float(self, value, field_name):
         if value != "":
-            self.filtered_field_dict[field_name] = float(value)
+            value = float(value)
+            self.filtered_field_dict[field_name] = value
+        return value
 
     def _cast_boolean(self, value, field_name):
-        self.filtered_field_dict[field_name] = bool(value)
+        value = bool(value)
+        self.filtered_field_dict[field_name] = value
+        return value
 
 
