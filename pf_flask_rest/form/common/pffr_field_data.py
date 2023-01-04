@@ -19,6 +19,7 @@ class FieldData(object):
     inputAttrClass: str = ""
     attributes: str = ""
     selectOptions: dict = {}
+    selectOptionLabel: str = "key"  # value
     selectOptionHTML: str = None
     selectDefault: str = None
     isMultiSelect: bool = False
