@@ -87,6 +87,12 @@ class CRUDHelper:
             raise pffrc_exception.error_message_exception(message)
         return None
 
+    def delete_all(self, model: BaseModel, query=None):
+        if not query:
+            query = model.query
+        query.delete()
+        pweb_db.session.commit()
+
     def delete_by_ids_not_in(self, model: BaseModel, ids, query=None):
         if not query:
             query = model.query
