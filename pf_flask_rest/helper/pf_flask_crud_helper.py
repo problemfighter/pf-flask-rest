@@ -46,8 +46,12 @@ class CRUDHelper:
         if sort_order and (sort_order != "asc" and sort_order != "desc"):
             sort_order = default_order
 
+        if not sort_order or not sort_field:
+            return query
+
         if sort_order == "asc":
             return query.order_by(getattr(model, sort_field).asc())
+
         return query.order_by(getattr(model, sort_field).desc())
 
     def set_pagination_from_params(self, query, item_per_page=PFFRConfig.total_item_per_page):
