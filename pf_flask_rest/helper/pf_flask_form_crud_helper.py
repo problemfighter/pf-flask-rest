@@ -27,9 +27,10 @@ class FormCRUDHelper:
         model.save()
         return model
 
-    def form_create(self, view_name: str, form_def: FormBaseDef, redirect_url=None, data: dict = None, params={}):
+    def form_create(self, view_name: str, form_def: FormBaseDef, redirect_url=None, data: dict = None, params={}, response_message: str = "Successfully created!"):
         if form_def.is_post_request() and form_def.is_valid_data():
             model = self.save(form_def=form_def, data=data)
+            flash(response_message, "success")
             if model and redirect_url:
                 return redirect(redirect_url)
             return model
@@ -45,9 +46,10 @@ class FormCRUDHelper:
         model.save()
         return model
 
-    def form_update(self, view_name: str, form_def: FormBaseDef, redirect_url=None, existing_model=None, form_model=None, model_id: int = None, data: dict = None, query=None, params={}):
+    def form_update(self, view_name: str, form_def: FormBaseDef, redirect_url=None, existing_model=None, form_model=None, model_id: int = None, data: dict = None, query=None, params={}, response_message: str = "Successfully updated!"):
         if form_def.is_post_request() and form_def.is_valid_data():
             model = self.update(form_def=form_def, existing_model=existing_model, data=data, query=query)
+            flash(response_message, "success")
             if model and redirect_url:
                 return redirect(redirect_url)
             return model
