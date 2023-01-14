@@ -58,6 +58,9 @@ class FormCRUDHelper:
                 flash('Invalid data', 'error')
                 if redirect_url:
                     return redirect(redirect_url)
+            form_def.set_model_value(form_model)
+        if isinstance(params, dict):
+            params["isEdit"] = True
         return self.template_helper.render(view_name, form=form_def, params=params)
 
     def form_delete(self, model_id: int):
