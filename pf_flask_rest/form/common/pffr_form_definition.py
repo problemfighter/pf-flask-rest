@@ -83,6 +83,9 @@ class FormDefinition:
             value = self._cast_float(value, field_name)
         elif datatype == "Boolean":
             value = self._cast_boolean(value, field_name)
+        elif datatype == "DateTime" or datatype == "Date":
+            if not value:
+                value = None
         elif not definition.required:
             self.filtered_field_dict[field_name] = value
         elif definition.required and value != "":
