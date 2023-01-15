@@ -1,8 +1,8 @@
 from flask import redirect, flash
-from pf_flask_rest.form.pf_app_form_def import FormBaseDef
-from pf_flask_rest.helper.pf_flask_crud_helper import CRUDHelper
 from pf_flask_db.pf_app_model import BaseModel
 from pf_flask_rest.common.pf_flask_rest_config import PFFRConfig
+from pf_flask_rest.form.pf_app_form_def import FormBaseDef
+from pf_flask_rest.helper.pf_flask_crud_helper import CRUDHelper
 from pf_flask_rest.helper.pf_flask_template_helper import TemplateHelper
 from pf_flask_rest.pf_flask_request_processor import RequestProcessor
 
@@ -20,10 +20,10 @@ class FormCRUDHelper:
         self.template_helper = template_helper
 
     def save(self, form_def: FormBaseDef, data: dict = None):
-        if not data:
-            form_def.is_valid_data()
-            data = form_def.get_data()
-        model = self.request_processor.populate_model(data, form_def)
+        if data:
+            model = self.request_processor.populate_model(data, form_def)
+        else:
+            model = form_def.get_model()
         model.save()
         return model
 
@@ -37,16 +37,18 @@ class FormCRUDHelper:
         return self.template_helper.render(view_name, form=form_def, params=params)
 
     def update(self, form_def: FormBaseDef, existing_model=None, data: dict = None, query=None):
-        if not data:
-            form_def.is_valid_data()
-            data = form_def.get_data()
         if not existing_model:
-            existing_model = self.crud_helper.get_by_id(self.model, data['id'], exception=True, query=query)
-        model = self.request_processor.populate_model(data, form_def, instance=existing_model)
+            existing_model = self.crud_helper.get_by_id(self.model, form_def.get_value("id"), exception=True, query=query)
+
+        if data:
+            model = self.request_processor.populate_model(data, form_def, instance=existing_model)
+        else:
+            model = form_def.get_model(existing_model=existing_model)
+
         model.save()
         return model
 
-    def form_update(self, view_name: str, form_def: FormBaseDef, redirect_url=None, existing_model=None, form_model=None, model_id: int = None, data: dict = None, query=None, params={}, response_message: str = "Successfully updated!"):
+    def form_update(self, view_name: str, form_def: FormBaseDef, display_def: FormBaseDef = None, redirect_url=None, existing_model=None, form_model=None, model_id: int = None, data: dict = None, query=None, params={}, response_message: str = "Successfully updated!"):
         if form_def.is_post_request() and form_def.is_valid_data():
             model = self.update(form_def=form_def, existing_model=existing_model, data=data, query=query)
             flash(response_message, "success")
@@ -60,7 +62,13 @@ class FormCRUDHelper:
                 flash('Invalid data', 'error')
                 if redirect_url:
                     return redirect(redirect_url)
-            form_def.set_model_value(form_model)
+
+            if display_def:
+                form_def.set_dict_value(display_def.dump(form_model))
+                if hasattr(form_model, "id"):
+                    form_def.set_value("id", form_model.id)
+            else:
+                form_def.set_model_value(form_model)
         if isinstance(params, dict):
             params["isEdit"] = True
         return self.template_helper.render(view_name, form=form_def, params=params)
@@ -86,10 +94,12 @@ class FormCRUDHelper:
     def details(self, model_id: int):
         return self.crud_helper.get_by_id(self.model, model_id, exception=False)
 
-    def form_details(self, view_name, model_id: int, redirect_url: str):
+    def form_details(self, view_name, model_id: int, redirect_url: str, display_def: FormBaseDef = None):
         data = self.details(model_id)
         if not data:
             return redirect(redirect_url)
+        if display_def:
+            data = display_def.dump(data)
         return self.template_helper.render(view_name, params={"data": data})
 
     def paginated_list(self, query=None, search_fields: list = None,
@@ -116,7 +126,8 @@ class FormCRUDHelper:
         )
         return self.template_helper.render(view_name, params={"table": response})
 
-    def form_list(self, query=None, search_fields: list = None, search_text: str = None, sort_default_field=PFFRConfig.sort_default_field):
+    def form_list(self, query=None, search_fields: list = None, search_text: str = None,
+                  sort_default_field=PFFRConfig.sort_default_field):
         return self.crud_helper.list(
             model=self.model, query=query, search_fields=search_fields,
             enable_sort=True, enable_pagination=False, search_text=search_text,

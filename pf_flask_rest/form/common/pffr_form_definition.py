@@ -10,13 +10,17 @@ class FormDefinition:
 
     def init_fields(self, declared_fields: dict = None):
         self.init_all()
+        if declared_fields:
+            self.init_field_only(declared_fields)
+
+    def init_field_only(self, declared_fields: dict):
+        self._field_datatype_dict = {}
         for field_name in declared_fields:
             field_def = declared_fields[field_name]
             if not field_def.dump_only:
                 self._set_field_definition(field_def)
 
     def init_all(self):
-        self._field_datatype_dict = {}
         self.filtered_field_dict = {}
         self.field_dict = {}
         self.is_validation_error = False
@@ -30,19 +34,22 @@ class FormDefinition:
                 field_definition.errors = errors[field_name]
                 field_definition.has_error = True
 
+    def set_value(self, field_name, value):
+        if hasattr(self, field_name):
+            field_definition = getattr(self, field_name)
+            field_definition.value = value
+
     def set_model_value(self, model):
         for field_name in self._field_datatype_dict:
             if hasattr(self, field_name) and hasattr(model, field_name):
                 model_data = getattr(model, field_name)
-                field_definition = getattr(self, field_name)
-                field_definition.value = model_data
+                self.set_value(field_name, model_data)
 
     def set_dict_value(self, values: dict):
         for field_name in self._field_datatype_dict:
             if field_name in values:
                 model_data = values[field_name]
-                field_definition = getattr(self, field_name)
-                field_definition.value = model_data
+                self.set_value(field_name, model_data)
 
     def cast_set_request_value(self, values: dict):
         for field_name in self._field_datatype_dict:
@@ -79,13 +86,18 @@ class FormDefinition:
         definition = getattr(self, field_name)
         if datatype == "Integer":
             value = self._cast_int(value, field_name)
+            self.filtered_field_dict[field_name] = value
         elif datatype == "Float":
             value = self._cast_float(value, field_name)
+            self.filtered_field_dict[field_name] = value
         elif datatype == "Boolean":
             value = self._cast_boolean(value, field_name)
+            self.filtered_field_dict[field_name] = value
         elif datatype == "DateTime" or datatype == "Date":
             if not value:
                 value = None
+            elif isinstance(value, str):
+                self.filtered_field_dict[field_name] = value
         elif not definition.required:
             self.filtered_field_dict[field_name] = value
         elif definition.required and value != "":
