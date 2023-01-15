@@ -1,6 +1,7 @@
 import json
 from flask import render_template, get_flashed_messages
 from pf_flask_rest.form.pf_app_form_def import FormBaseDef
+from pf_flask_rest_com.pf_flask_request_helper import request_helper
 
 
 class TemplateUtil:
@@ -23,6 +24,10 @@ class TemplateUtil:
         if response and message_stack:
             response["message"] = message_stack.strip()
         return json.dumps(response)
+
+    @property
+    def search_value(self):
+        return request_helper.get_query_params_value("search", "")
 
 
 template_util = TemplateUtil()
