@@ -4,10 +4,11 @@ from pf_flask_rest.form.common.pffr_form_definition import FormDefinition
 
 
 class FormBaseDef(FormAction):
-    definition: FormDefinition = FormDefinition()
+    definition: FormDefinition = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.definition = FormDefinition()
         self.definition.init_fields(self.declared_fields)
 
     def set_dict_value(self, values: dict):
@@ -24,6 +25,10 @@ class FormBaseDef(FormAction):
     def set_value(self, field_name, value):
         if self.definition:
             self.definition.set_value(field_name, value)
+
+    def set_select_option(self, field_name, options: list, key_name: str, value_name: str, first_opt: str = "Select"):
+        if self.definition:
+            self.definition.process_and_set_option(field_name, options, key_name, value_name, first_opt)
 
 
 class FormAppDef(APIAppDef, FormBaseDef):

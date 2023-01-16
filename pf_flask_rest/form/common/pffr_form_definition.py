@@ -34,9 +34,14 @@ class FormDefinition:
                 field_definition.errors = errors[field_name]
                 field_definition.has_error = True
 
-    def set_value(self, field_name, value):
+    def get_definition(self, field_name):
         if hasattr(self, field_name):
-            field_definition = getattr(self, field_name)
+            return getattr(self, field_name)
+        return None
+
+    def set_value(self, field_name, value):
+        field_definition = self.get_definition(field_name)
+        if field_definition:
             field_definition.value = value
 
     def set_model_value(self, model):
@@ -123,4 +128,14 @@ class FormDefinition:
         self.filtered_field_dict[field_name] = value
         return value
 
-
+    def process_and_set_option(self, field_name, options: list, key_name: str, value_name: str, first_opt: str = "Select"):
+        field_definition = self.get_definition(field_name)
+        if not options or not key_name or not value_name or not field_definition:
+            return
+        select_options: dict = {
+            "": first_opt
+        }
+        for option in options:
+            if key_name in option and value_name in option:
+                select_options[option[key_name]] = option[value_name]
+        field_definition.selectOptions = select_options

@@ -1,5 +1,6 @@
 from flask import redirect, flash
 from pf_flask_db.pf_app_model import BaseModel
+from pf_flask_rest.api.pf_app_api_def import APIPrimeDef
 from pf_flask_rest.common.pf_flask_rest_config import PFFRConfig
 from pf_flask_rest.form.pf_app_form_def import FormBaseDef
 from pf_flask_rest.helper.pf_flask_crud_helper import CRUDHelper
@@ -126,10 +127,12 @@ class FormCRUDHelper:
         )
         return self.template_helper.render(view_name, params={"table": response})
 
-    def form_list(self, query=None, search_fields: list = None, search_text: str = None,
-                  sort_default_field=PFFRConfig.sort_default_field):
-        return self.crud_helper.list(
+    def form_list(self, query=None, search_fields: list = None, search_text: str = None, sort_default_field=PFFRConfig.sort_default_field, response_dto: APIPrimeDef = None):
+        result = self.crud_helper.list(
             model=self.model, query=query, search_fields=search_fields,
             enable_sort=True, enable_pagination=False, search_text=search_text,
             sort_default_order=sort_default_field
         )
+        if response_dto:
+            return response_dto.dump(result, many=True)
+        return result
