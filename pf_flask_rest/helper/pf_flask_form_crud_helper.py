@@ -77,8 +77,8 @@ class FormCRUDHelper:
             params["isEdit"] = True
         return self.template_helper.render(view_name, form=form_def, params=params)
 
-    def form_delete(self, model_id: int, redirect_url: str, response_message: str = "Successfully deleted!"):
-        existing_model = self.crud_helper.get_by_id(self.model, model_id, exception=False)
+    def form_delete(self, model_id: int, redirect_url: str, response_message: str = "Successfully deleted!", query=None):
+        existing_model = self.crud_helper.get_by_id(self.model, model_id, exception=False, query=query)
         if not existing_model:
             flash('Invalid data', 'error')
             return redirect(redirect_url)
@@ -95,11 +95,11 @@ class FormCRUDHelper:
         existing_model.save()
         return True
 
-    def details(self, model_id: int):
-        return self.crud_helper.get_by_id(self.model, model_id, exception=False)
+    def details(self, model_id: int, query=None):
+        return self.crud_helper.get_by_id(self.model, model_id, exception=False, query=query)
 
-    def form_details(self, view_name, model_id: int, redirect_url: str, display_def: FormBaseDef = None, params: dict = {}):
-        data = self.details(model_id)
+    def form_details(self, view_name, model_id: int, redirect_url: str, display_def: FormBaseDef = None, params: dict = {}, query=None):
+        data = self.details(model_id, query=query)
         if not data:
             return redirect(redirect_url)
         if display_def:
