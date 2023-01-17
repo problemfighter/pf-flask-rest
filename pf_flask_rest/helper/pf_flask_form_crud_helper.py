@@ -25,7 +25,8 @@ class FormCRUDHelper:
             model = self.request_processor.populate_model(data, form_def)
         else:
             model = form_def.get_model()
-        model.save()
+        if model:
+            model.save()
         return model
 
     def form_create(self, view_name: str, form_def: FormBaseDef, redirect_url=None, data: dict = None, params={}, response_message: str = "Successfully created!"):
@@ -34,7 +35,8 @@ class FormCRUDHelper:
             flash(response_message, "success")
             if model and redirect_url:
                 return redirect(redirect_url)
-            return model
+            if model:
+                return model
         return self.template_helper.render(view_name, form=form_def, params=params)
 
     def update(self, form_def: FormBaseDef, existing_model=None, data: dict = None, query=None):
@@ -55,7 +57,8 @@ class FormCRUDHelper:
             flash(response_message, "success")
             if model and redirect_url:
                 return redirect(redirect_url)
-            return model
+            if model:
+                return model
         elif form_def.is_get_request():
             if not form_model and model_id:
                 form_model = self.details(model_id=model_id)
@@ -95,13 +98,14 @@ class FormCRUDHelper:
     def details(self, model_id: int):
         return self.crud_helper.get_by_id(self.model, model_id, exception=False)
 
-    def form_details(self, view_name, model_id: int, redirect_url: str, display_def: FormBaseDef = None):
+    def form_details(self, view_name, model_id: int, redirect_url: str, display_def: FormBaseDef = None, params: dict = {}):
         data = self.details(model_id)
         if not data:
             return redirect(redirect_url)
         if display_def:
             data = display_def.dump(data)
-        return self.template_helper.render(view_name, params={"data": data})
+        params.update({"data": data})
+        return self.template_helper.render(view_name, params=params)
 
     def paginated_list(self, query=None, search_fields: list = None,
                        sort_default_field=PFFRConfig.sort_default_field,
@@ -117,6 +121,7 @@ class FormCRUDHelper:
                             sort_default_field=PFFRConfig.sort_default_field,
                             sort_default_order=PFFRConfig.sort_default_order,
                             item_per_page=PFFRConfig.total_item_per_page,
+                            params: dict = {}
                             ):
         response = self.paginated_list(
             query=query,
@@ -125,7 +130,8 @@ class FormCRUDHelper:
             sort_default_order=sort_default_order,
             item_per_page=item_per_page,
         )
-        return self.template_helper.render(view_name, params={"table": response})
+        params.update({"table": response})
+        return self.template_helper.render(view_name, params=params)
 
     def form_list(self, query=None, search_fields: list = None, search_text: str = None, sort_default_field=PFFRConfig.sort_default_field, response_dto: APIPrimeDef = None):
         result = self.crud_helper.list(

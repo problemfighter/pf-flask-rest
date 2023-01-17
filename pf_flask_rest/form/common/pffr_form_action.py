@@ -49,7 +49,7 @@ class FormAction(APIBaseDef):
         except PFFRCException as e:
             if e.messageResponse and e.messageResponse.error:
                 self.definition.set_field_errors(e.messageResponse.error)
-                return redirect(self.request_helper.get_current_url())
+        return None
 
     def set_model_data(self, model: BaseModel):
         self.definition.set_model_value(model)
