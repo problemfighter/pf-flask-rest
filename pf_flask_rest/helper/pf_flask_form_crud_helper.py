@@ -98,6 +98,9 @@ class FormCRUDHelper:
     def details(self, model_id: int, query=None):
         return self.crud_helper.get_by_id(self.model, model_id, exception=False, query=query)
 
+    def render_view(self, view_name, params: dict = {}):
+        return self.template_helper.render(view_name, params=params)
+
     def form_details(self, view_name, model_id: int, redirect_url: str, display_def: FormBaseDef = None, params: dict = {}, query=None):
         data = self.details(model_id, query=query)
         if not data:
