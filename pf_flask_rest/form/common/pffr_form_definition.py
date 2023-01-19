@@ -112,15 +112,19 @@ class FormDefinition:
         definition.value = value
 
     def _cast_int(self, value, field_name):
-        if value != "":
+        if value is not None and value != "":
             value = int(value)
             self.filtered_field_dict[field_name] = value
+        elif not value:
+            value = None
         return value
 
     def _cast_float(self, value, field_name):
-        if value != "":
+        if value is not None and value != "":
             value = float(value)
             self.filtered_field_dict[field_name] = value
+        elif not value:
+            value = None
         return value
 
     def _cast_boolean(self, value, field_name):

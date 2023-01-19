@@ -136,9 +136,11 @@ class FormCRUDHelper:
         params.update({"table": response})
         return self.template_helper.render(view_name, params=params)
 
-    def form_list(self, query=None, search_fields: list = None, search_text: str = None, sort_default_field=PFFRConfig.sort_default_field, response_dto: APIPrimeDef = None):
+    def form_list(self, query=None, search_fields: list = None, search_text: str = None, sort_default_field=PFFRConfig.sort_default_field, response_dto: APIPrimeDef = None, model=None):
+        if not model:
+            model = self.model
         result = self.crud_helper.list(
-            model=self.model, query=query, search_fields=search_fields,
+            model=model, query=query, search_fields=search_fields,
             enable_sort=True, enable_pagination=False, search_text=search_text,
             sort_default_order=sort_default_field
         )

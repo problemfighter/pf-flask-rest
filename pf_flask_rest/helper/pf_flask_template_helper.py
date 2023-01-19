@@ -25,6 +25,18 @@ class TemplateUtil:
             response["message"] = message_stack.strip()
         return json.dumps(response)
 
+    def base_url(self):
+        info = request_helper.get_url_info()
+        return info.baseURL
+
+    def set_base_js(self, obj_prefix="PWeb"):
+        script = f"""
+        <script>
+            {obj_prefix}.baseURL = "{self.base_url()}"
+        </script>
+        """
+        return script
+
     @property
     def search_value(self):
         return request_helper.get_query_params_value("search", "")
