@@ -1,5 +1,4 @@
 from marshmallow import missing, ValidationError
-from werkzeug.utils import redirect
 from pf_flask_db.pf_app_model import BaseModel
 from pf_flask_rest.api.pf_app_api_def import APIBaseDef
 from pf_flask_rest.form.common.pffr_form_definition import FormDefinition
@@ -17,9 +16,10 @@ class FormAction(APIBaseDef):
         self.definition.cast_set_request_value(form_data)
         self.set_property()
 
-    def is_valid_data(self) -> bool:
+    def is_valid_data(self, form_data=None) -> bool:
         self.definition.init_field_only(self.fields)
-        form_data = self.get_requested_raw_data()
+        if not form_data:
+            form_data = self.get_requested_raw_data()
         if form_data and self.definition:
             self.cast_and_set_value(form_data)
             try:

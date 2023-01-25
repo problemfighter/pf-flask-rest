@@ -30,7 +30,7 @@ class FormCRUDHelper:
         return model
 
     def form_create(self, view_name: str, form_def: FormBaseDef, redirect_url=None, data: dict = None, params={}, response_message: str = "Successfully created!"):
-        if form_def.is_post_request() and form_def.is_valid_data():
+        if form_def.is_post_request() and form_def.is_valid_data(form_data=data):
             model = self.save(form_def=form_def, data=data)
             flash(response_message, "success")
             if model and redirect_url:
@@ -52,7 +52,7 @@ class FormCRUDHelper:
         return model
 
     def form_update(self, view_name: str, form_def: FormBaseDef, display_def: FormBaseDef = None, redirect_url=None, existing_model=None, form_model=None, model_id: int = None, data: dict = None, query=None, params={}, response_message: str = "Successfully updated!"):
-        if form_def.is_post_request() and form_def.is_valid_data():
+        if form_def.is_post_request() and form_def.is_valid_data(form_data=data):
             model = self.update(form_def=form_def, existing_model=existing_model, data=data, query=query)
             flash(response_message, "success")
             if model and redirect_url:
@@ -98,8 +98,8 @@ class FormCRUDHelper:
     def details(self, model_id: int, query=None):
         return self.crud_helper.get_by_id(self.model, model_id, exception=False, query=query)
 
-    def render_view(self, view_name, params: dict = {}):
-        return self.template_helper.render(view_name, params=params)
+    def render_view(self, view_name, params: dict = {}, form: FormBaseDef = None):
+        return self.template_helper.render(view_name, params=params, form=form)
 
     def form_details(self, view_name, model_id: int, redirect_url: str, display_def: FormBaseDef = None, params: dict = {}, query=None):
         data = self.details(model_id, query=query)
