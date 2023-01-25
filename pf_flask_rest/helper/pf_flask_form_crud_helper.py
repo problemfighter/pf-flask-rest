@@ -124,7 +124,7 @@ class FormCRUDHelper:
                             sort_default_field=PFFRConfig.sort_default_field,
                             sort_default_order=PFFRConfig.sort_default_order,
                             item_per_page=PFFRConfig.total_item_per_page,
-                            params: dict = {}
+                            params: dict = {}, response_def: APIPrimeDef = None
                             ):
         response = self.paginated_list(
             query=query,
@@ -133,6 +133,8 @@ class FormCRUDHelper:
             sort_default_order=sort_default_order,
             item_per_page=item_per_page,
         )
+        if response_def and response.items:
+            response.items = response_def.dump(response.items, many=True)
         params.update({"table": response})
         return self.template_helper.render(view_name, params=params)
 
