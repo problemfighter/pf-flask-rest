@@ -18,6 +18,7 @@ class FieldData(object):
     topAttrClass: str = ""
     inputAttrClass: str = ""
     attributes: str = ""
+    selectFirstEntry: str = None
     selectOptions: dict = {}
     selectOptionLabel: str = "key"  # value
     selectOptionHTML: str = None
