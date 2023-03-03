@@ -13,12 +13,12 @@ class FormDefinition:
         if declared_fields:
             self.init_field_only(declared_fields)
 
-    def init_field_only(self, declared_fields: dict):
+    def init_field_only(self, declared_fields: dict, existing_definition=None):
         self._field_datatype_dict = {}
         for field_name in declared_fields:
             field_def = declared_fields[field_name]
             if not field_def.dump_only:
-                self._set_field_definition(field_def)
+                self._set_field_definition(field_def, existing_definition)
 
     def init_all(self):
         self.filtered_field_dict = {}
@@ -67,12 +67,17 @@ class FormDefinition:
         self.validation_errors.append(error)
         return self
 
-    def _set_field_definition(self, field):
+    def _set_field_definition(self, field, existing_definition=None):
         if field.name:
-            setattr(self, field.name, self._init_field_definition(field))
+            field_definition = None
+            if existing_definition and hasattr(existing_definition, field.name):
+                field_definition = getattr(existing_definition, field.name)
+            field_definition = self._init_field_definition(field, definition=field_definition)
+            setattr(self, field.name, field_definition)
 
-    def _init_field_definition(self, field):
-        definition = FieldData()
+    def _init_field_definition(self, field, definition=None):
+        if not definition:
+            definition = FieldData()
         definition.name = field.name
         definition.required = field.required
         definition = self._set_field_value(field, definition)
@@ -97,6 +102,9 @@ class FormDefinition:
             self.filtered_field_dict[field_name] = value
         elif datatype == "Boolean":
             value = self._cast_boolean(value, field_name)
+            self.filtered_field_dict[field_name] = value
+        elif datatype == "EnumField":
+            value = str(value)
             self.filtered_field_dict[field_name] = value
         elif datatype == "DateTime" or datatype == "Date":
             if not value:

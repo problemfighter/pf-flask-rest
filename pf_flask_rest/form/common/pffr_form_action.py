@@ -17,7 +17,7 @@ class FormAction(APIBaseDef):
         self.set_property()
 
     def is_valid_data(self, form_data=None) -> bool:
-        self.definition.init_field_only(self.fields)
+        self.definition.init_field_only(self.fields, self.definition)
         if not form_data:
             form_data = self.get_requested_raw_data()
         if form_data and self.definition:

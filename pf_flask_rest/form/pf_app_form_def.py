@@ -26,6 +26,10 @@ class FormBaseDef(FormAction):
         if self.definition:
             self.definition.set_value(field_name, value)
 
+    def set_field_error(self, field_name, error):
+        if self.definition:
+            self.definition.set_field_errors({field_name: error})
+
     def set_select_option(self, field_name, options: list, key_name: str, value_name: str, first_opt: str = "Select"):
         if self.definition:
             self.definition.process_and_set_option(field_name, options, key_name, value_name, first_opt)
