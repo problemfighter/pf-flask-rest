@@ -16,12 +16,17 @@ class FormAction(APIBaseDef):
         self.definition.cast_set_request_value(form_data)
         self.set_property()
 
-    def is_valid_data(self, form_data=None) -> bool:
+    def init_request_data(self, form_data=None):
         self.definition.init_field_only(self.fields, self.definition)
         if not form_data:
             form_data = self.get_requested_raw_data()
         if form_data and self.definition:
             self.cast_and_set_value(form_data)
+        return form_data
+
+    def is_valid_data(self, form_data=None) -> bool:
+        form_data = self.init_request_data(form_data=form_data)
+        if form_data and self.definition:
             try:
                 form_data = self.get_requested_data()
                 self.cast_and_set_value(form_data)
